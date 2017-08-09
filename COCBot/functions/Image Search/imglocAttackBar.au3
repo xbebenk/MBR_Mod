@@ -194,7 +194,7 @@ Func AttackBarCheck($Remaining = False)
 
 	$strinToReturn = StringTrimLeft($strinToReturn, 1)
 
-	; Setlog("String: " & $strinToReturn)
+	Setlog("String: " & $strinToReturn) ; Demen's test
 	; Will return [0] = Name , [1] = X , [2] = Y , [3] = Quantities , [4] = Slot Number
 	; Old style is: "|" & Troopa Number & "#" & Slot Number & "#" & Quantities
 	Return $strinToReturn

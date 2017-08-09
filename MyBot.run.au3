@@ -600,6 +600,15 @@ EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
 
+; Demen - AttackBar test
+	Setlog("Start testing PrepareAttack($LB, False)")
+	PrepareSearch()
+	PrepareAttack($LB, False)
+	Setlog("Finish PrepareAttack($LB, False)")
+	ReturnHome(False, False)
+; Demen - AttackBar test
+
+
 	If $ichkSwitchAcc = 1 And $bReMatchAcc = True Then ; SwitchAcc Demen
 		$nCurProfile = _GUICtrlComboBox_GetCurSel($g_hCmbProfile) + 1
 		Setlog("Rematching Profile [" & $nCurProfile & "] - " & $ProfileList[$nCurProfile] & " (CoC Acc. " & $aMatchProfileAcc[$nCurProfile - 1] & ")")
