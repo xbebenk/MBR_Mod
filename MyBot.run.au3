@@ -604,10 +604,13 @@ Func runBot() ;Bot that runs everything in order
 	Setlog("Start testing PrepareAttack($LB, False)")
 	PrepareSearch()
 	PrepareAttack($LB, False)
+	If _Sleep(2000) Then Return
+	Setlog("Drag for more troops")
+	ClickDrag(830, 660, 20, 660, 2000)
+	PrepareAttack($LB, False)
 	Setlog("Finish PrepareAttack($LB, False)")
 	ReturnHome(False, False)
 ; Demen - AttackBar test
-
 
 	If $ichkSwitchAcc = 1 And $bReMatchAcc = True Then ; SwitchAcc Demen
 		$nCurProfile = _GUICtrlComboBox_GetCurSel($g_hCmbProfile) + 1
