@@ -192,11 +192,23 @@ Func AttackBarCheck($Remaining = False)
 		_GDIPlus_BitmapDispose($editedImage)
 	EndIf
 
+	; Drag & checking ExtendedAttackBar - Demen
+	If $CheckSlot12 And IsArray($aResult) Then
+		If $g_iDebugSetlog = 1 Then Setlog("$strinToReturn 1st page = " & $strinToReturn)
+		Local $aTroop1stPage[UBound($aResult)]
+		For $i = 0 To UBound($aResult) - 1
+			$aTroop1stPage[$i] = $aResult[$i][0]
+		Next
+		ClickDrag(830, 660, 20, 660, 2000)
+		$strinToReturn &= ExtendedAttackBarCheck($aTroop1stPage)
+	EndIf	; Drag & checking ExtendedAttackBar - Demen
+
 	$strinToReturn = StringTrimLeft($strinToReturn, 1)
 
 	Setlog("String: " & $strinToReturn) ; Demen's test
 	; Will return [0] = Name , [1] = X , [2] = Y , [3] = Quantities , [4] = Slot Number
 	; Old style is: "|" & Troopa Number & "#" & Slot Number & "#" & Quantities
+
 	Return $strinToReturn
 
 EndFunc   ;==>AttackBarCheck
