@@ -15,7 +15,7 @@
 
 Func ExtendedAttackBarCheck($aTroop1stPage)
 
-	Local $x = 40, $y = 659, $x1 = 853, $y1 = 698
+	Local $x = 0, $y = 659, $x1 = 853, $y1 = 698
 	Static $CheckSlotwHero2 = False
 
 	; Setup arrays, including default return values for $return
@@ -132,7 +132,7 @@ Func ExtendedAttackBarCheck($aTroop1stPage)
 		EndIf
 	EndIf
 
-	Setlog("Extended String: " & $strinToReturn)
+	If $g_iDebugSetlog = 1 Then Setlog("Extended String: " & $strinToReturn)
 	Return $strinToReturn
 
 EndFunc   ;==>AttackBarCheck

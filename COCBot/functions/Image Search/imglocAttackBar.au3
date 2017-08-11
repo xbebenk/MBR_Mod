@@ -204,11 +204,12 @@ Func AttackBarCheck($Remaining = False)
 		ClickDrag(830, 660, 20, 660, 2000)
 		If _Sleep(1500) Then Return
 		$strinToReturn &= ExtendedAttackBarCheck($aTroop1stPage)
+		ClickDrag(20, 660, 830, 660, 2000)
 	EndIf	; Drag & checking ExtendedAttackBar - Demen
 
 	$strinToReturn = StringTrimLeft($strinToReturn, 1)
 
-	Setlog("String: " & $strinToReturn) ; Demen's test
+	; Setlog("String: " & $strinToReturn)
 	; Will return [0] = Name , [1] = X , [2] = Y , [3] = Quantities , [4] = Slot Number
 	; Old style is: "|" & Troopa Number & "#" & Slot Number & "#" & Quantities
 
