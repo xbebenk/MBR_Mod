@@ -135,8 +135,6 @@ Func ExtendedAttackBarCheck($aTroop1stPage, $Remaining = False)
 		EndIf
 	EndIf
 
-	$strinToReturn = StringTrimLeft($strinToReturn, 1)
-
 	Setlog("Extended String: " & $strinToReturn)
 	Return $strinToReturn
 
