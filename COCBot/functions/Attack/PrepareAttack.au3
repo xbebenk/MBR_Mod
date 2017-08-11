@@ -58,8 +58,8 @@ Func PrepareAttack($pMatchMode, $Remaining = False) ;Assigns troops
 	Local $aTemp[12][3]
 
 	If $aTroopDataList[0] > 11 Then ; ExtendedAttackBar Demen
-		ReDim $aTemp[$aTroopDataList[0]][3]
-		ReDim $g_avAttackTroops[$aTroopDataList[0]][2]
+		ReDim $aTemp[22][3]
+		ReDim $g_avAttackTroops[22][2]
 	EndIf
 
 	If $result <> "" Then

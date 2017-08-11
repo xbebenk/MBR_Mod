@@ -13,12 +13,10 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func ExtendedAttackBarCheck($aTroop1stPage, $Remaining = False)
+Func ExtendedAttackBarCheck($aTroop1stPage)
 
 	Local $x = 40, $y = 659, $x1 = 853, $y1 = 698
-	Static Local $CheckSlotwHero2 = False
-
-	If Not $Remaining Then $CheckSlotwHero2 = False
+	Static $CheckSlotwHero2 = False
 
 	; Setup arrays, including default return values for $return
 	Local $aResult[1][6], $aCoordArray[1][2], $aCoords, $aCoordsSplit, $aValue
@@ -86,34 +84,33 @@ Func ExtendedAttackBarCheck($aTroop1stPage, $Remaining = False)
 
 			_ArraySort($aResult, 0, 0, 0, 1) ; Sort By X position , will be the Slot 0 to $i
 
-			If Not $Remaining Then
-				For $i = 0 To UBound($aResult) - 1
-					If $aResult[$i][0] = "King" Or $aResult[$i][0] = "Queen" Or $aResult[$i][0] = "Warden" Then
-						$CheckSlotwHero2 = True
-					EndIf
-				Next
-			EndIf
+			For $i = 0 To UBound($aResult) - 1
+				If $aResult[$i][0] = "King" Or $aResult[$i][0] = "Queen" Or $aResult[$i][0] = "Warden" Then
+					$CheckSlotwHero2 = True
+				EndIf
+			Next
 
-			For $i = UBound($aResult) - 1 To 0 Step -1
+			For $i = 0 To UBound($aResult) - 1
 				Local $Slottemp
 				If $aResult[$i][1] > 0 Then
 					If $g_iDebugSetlog = 1 Then SetLog("SLOT : " & $i, $COLOR_DEBUG) ;Debug
 					If $g_iDebugSetlog = 1 Then SetLog("Detection : " & $aResult[$i][0] & "|x" & $aResult[$i][1] & "|y" & $aResult[$i][2], $COLOR_DEBUG) ;Debug
-					$Slottemp = SlotAttack(Number($aResult[$i][1]), False, False) + 18
-					If $CheckSlotwHero2 And StringInStr($aResult[$i][0], "Spell") = 0 Then $Slottemp -= 14
+					$Slottemp = SlotAttack(Number($aResult[$i][1]), False, False)
+					$Slottemp[0] += 18
+					If $CheckSlotwHero2 And StringInStr($aResult[$i][0], "Spell") = 0 Then $Slottemp[0] -= 14
 					If $g_bRunState = False Then Return ; Stop function
 					If _Sleep(20) Then Return ; Pause function
 					If UBound($Slottemp) = 2 Then
 						If $g_iDebugSetlog = 1 Then SetLog("OCR : " & $Slottemp[0] & "|SLOT: " & $Slottemp[1], $COLOR_DEBUG) ;Debug
 						If $aResult[$i][0] = "Castle" Or $aResult[$i][0] = "King" Or $aResult[$i][0] = "Queen" Or $aResult[$i][0] = "Warden" Then
 							$aResult[$i][3] = 1
-							$aResult[$i][4] = 21 - $Slottemp[1] ; reverse slot from 11 to 21
+							$aResult[$i][4] = $Slottemp[1] + 11 ; slot from 11 to 21
 						Else
 							$aResult[$i][3] = Number(getTroopCountBig(Number($Slottemp[0]), 636)) ; For Bigg Numbers , when the troops is selected
-							$aResult[$i][4] = 21 - $Slottemp[1] ; reverse slot
+							$aResult[$i][4] = $Slottemp[1] + 11 ; slot from 11 to 21
 							If $aResult[$i][3] = "" Or $aResult[$i][3] = 0 Then
 								$aResult[$i][3] = Number(getTroopCountSmall(Number($Slottemp[0]), 641)) ; For small Numbers
-								$aResult[$i][4] = 21 - $Slottemp[1] ; reverse slot
+								$aResult[$i][4] = $Slottemp[1] + 11 ; slot from 11 to 21
 							EndIf
 						EndIf
 					Else
@@ -124,7 +121,7 @@ Func ExtendedAttackBarCheck($aTroop1stPage, $Remaining = False)
 					EndIf
 
 					If IsArray($aTroop1stPage) Then
-						If _ArraySearch($aTroop1stPage, $aResult[$i][0]) = -1 Then
+						If _ArraySearch($aTroop1stPage, $aResult[$i][0]) = -1 Or _ArraySearch($aTroop1stPage, $aResult[$i][0]) = 11 Then
 							$strinToReturn &= "|" & TroopIndexLookup($aResult[$i][0]) & "#" & $aResult[$i][4] & "#" & $aResult[$i][3]
 						Else
 							If $g_iDebugSetlog = 1 Then Setlog($aResult[$i][0] & " is already found in 1st page at Slot: " & _ArraySearch($aTroop1stPage, $aResult[$i][0]))
@@ -139,3 +136,9 @@ Func ExtendedAttackBarCheck($aTroop1stPage, $Remaining = False)
 	Return $strinToReturn
 
 EndFunc   ;==>AttackBarCheck
+
+Func SelectDropTroopExtended($Troop)
+
+	If IsAttackPage() Then Click(82 + ($Troop * 72.5), 595 + $g_iBottomOffsetY, 1, 0, "#0111") ;860x780
+
+EndFunc   ;==>SelectDropTroopExtended

@@ -163,7 +163,9 @@ Func AttackBarCheck($Remaining = False)
 						$aResult[$i][3] = -1
 						$aResult[$i][4] = -1
 					EndIf
-					$strinToReturn &= "|" & TroopIndexLookup($aResult[$i][0]) & "#" & $aResult[$i][4] & "#" & $aResult[$i][3]
+					If $aResult[$i][4] <= 10 Then ; ExtendedAttackBarCheck - Demen
+						$strinToReturn &= "|" & TroopIndexLookup($aResult[$i][0]) & "#" & $aResult[$i][4] & "#" & $aResult[$i][3]
+					EndIf
 				EndIf
 			Next
 		EndIf
@@ -200,6 +202,7 @@ Func AttackBarCheck($Remaining = False)
 			$aTroop1stPage[$i] = $aResult[$i][0]
 		Next
 		ClickDrag(830, 660, 20, 660, 2000)
+		If _Sleep(1500) Then Return
 		$strinToReturn &= ExtendedAttackBarCheck($aTroop1stPage)
 	EndIf	; Drag & checking ExtendedAttackBar - Demen
 

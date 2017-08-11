@@ -86,6 +86,23 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 		EndIf
 	Next
 
+	; ExtendedAttackBar - Demen
+	Static $bDragTroop = False
+	If $troopPosition >= 11 Then
+		If $g_iDebugSetlog Then Setlog($troopName & " is in 2nd page. Drag attack bar")
+		ClickDrag(830, 660, 20, 660, 2000)
+		If _Sleep(1500) Then Return
+		$troopPosition -= 11
+		$bDragTroop = True
+
+	ElseIf $bDragTroop Then
+		If $g_iDebugSetlog Then Setlog("Drag attack bar back to 1st page")
+		ClickDrag(20, 660, 830, 660, 2000)
+		If _Sleep(1500) Then Return
+		$bDragTroop = False
+	EndIf
+	; ExtendedAttackBar - Demen
+
 	Local $usespell = True
 	Switch $iTroopIndex
 		Case $eLSpell
@@ -124,7 +141,13 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 
 		If $g_iCSVLastTroopPositionDropTroopFromINI <> $troopPosition Then
 			ReleaseClicks()
-			SelectDropTroop($troopPosition) ; select the troop...
+
+			If $bDragTroop Then ; ExtendedAttackBar - Demen
+				SelectDropTroopExtended($troopPosition)
+			Else
+				SelectDropTroop($troopPosition) ; select the troop...
+			EndIf
+
 			$g_iCSVLastTroopPositionDropTroopFromINI = $troopPosition
 			ReleaseClicks()
 		EndIf

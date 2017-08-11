@@ -716,6 +716,15 @@ Func ParseAttackCSV($debug = False)
 			Else
 				If StringLeft($line, 7) <> "NOTE  |" And StringLeft($line, 7) <> "      |" And StringStripWS(StringUpper($line), 2) <> "" Then Setlog("attack row error, discard: row " & $iLine + 1, $COLOR_ERROR)
 			EndIf
+
+			; ExtendedAttackBar - Demen
+			If _ArraySearch($g_avAttackTroops, $eWarden) >= 11 Or _ArraySearch($g_avAttackTroops, $eQueen) >= 11 Or _ArraySearch($g_avAttackTroops, $eKing) >= 11 Then
+				If $g_iDebugSetlog Then Setlog("Hero is in 2nd page. Drag attack bar to use ability")
+				ClickDrag(830, 660, 20, 660, 2000)
+				If _Sleep(1500) Then Return
+			EndIf
+			; ExtendedAttackBar - Demen
+
 			If $bWardenDrop = True Then  ;Check hero, but skip Warden if was dropped with sleepafter to short to allow icon update
 				Local $bHold = $g_bCheckWardenPower ; store existing flag state, should be true?
 				$g_bCheckWardenPower = False ;temp disable warden health check
