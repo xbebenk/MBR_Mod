@@ -601,12 +601,12 @@ EndFunc   ;==>MainLoop
 Func runBot() ;Bot that runs everything in order
 
 ; Demen - AttackBar test
-	Setlog("Start testing PrepareAttack($LB, False)")
-	PrepareSearch()
-	If _Sleep(2000) Then Return
-	PrepareAttack($LB, False)
-	Setlog("Finish PrepareAttack($LB, False)")
-	ReturnHome(False, False)
+;~ 	Setlog("Start testing PrepareAttack($LB, False)")
+;~ 	PrepareSearch()
+;~ 	If _Sleep(2000) Then Return
+;~ 	PrepareAttack($LB, False)
+;~ 	Setlog("Finish PrepareAttack($LB, False)")
+;~ 	ReturnHome(False, False)
 ; Demen - AttackBar test
 
 	If $ichkSwitchAcc = 1 And $bReMatchAcc = True Then ; SwitchAcc Demen
