@@ -87,19 +87,14 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 	Next
 
 	; ExtendedAttackBar - Demen
-	Static $bDragTroop = False
+	Local $bAlreadyDrag = False
+
 	If $troopPosition >= 11 Then
+		$troopPosition -= 11
 		If $g_iDebugSetlog Then Setlog($troopName & " is in 2nd page. Drag attack bar")
 		ClickDrag(830, 660, 20, 660, 2000)
 		If _Sleep(1500) Then Return
-		$troopPosition -= 11
-		$bDragTroop = True
-
-	ElseIf $bDragTroop Then
-		If $g_iDebugSetlog Then Setlog("Drag attack bar back to 1st page")
-		ClickDrag(20, 660, 830, 660, 2000)
-		If _Sleep(1500) Then Return
-		$bDragTroop = False
+		$bAlreadyDrag = True
 	EndIf
 	; ExtendedAttackBar - Demen
 
@@ -142,7 +137,7 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 		If $g_iCSVLastTroopPositionDropTroopFromINI <> $troopPosition Then
 			ReleaseClicks()
 
-			If $bDragTroop Then ; ExtendedAttackBar - Demen
+			If $bAlreadyDrag Then ; ExtendedAttackBar - Demen
 				SelectDropTroopExtended($troopPosition)
 			Else
 				SelectDropTroop($troopPosition) ; select the troop...
@@ -235,6 +230,14 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 
 		ReleaseClicks()
 		;SuspendAndroid($SuspendMode)
+
+		; ExtendedAttackBar - Demen
+		If $bAlreadyDrag Then
+			If $g_iDebugSetlog Then Setlog("Drag attack bar back to 1st page")
+			ClickDrag(20, 660, 830, 660, 2000)
+			If _Sleep(1500) Then Return
+		EndIf
+		; ExtendedAttackBar - Demen
 
 		;sleep time after deploy all troops
 		Local $sleepafter = 0

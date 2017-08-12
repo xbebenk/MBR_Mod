@@ -172,7 +172,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		If $g_iDebugSetlog = 1 Then SetDebugLog("Wait for Star Bonus window to appear #" & $counter)
 		If _Sleep($DELAYRETURNHOME4) Then Return
 		If StarBonus() = True Then Setlog("Star Bonus window closed chief!", $COLOR_INFO) ; Check for Star Bonus window to fill treasury (2016-01) update
-;Demen test attackbar ;~ 		If ReturnHomeMainPage() Then Return
+ 		If ReturnHomeMainPage() Then Return
 		$counter += 1
 		If $counter >= 50 Or isProblemAffect(True) Then
 			SetLog("Cannot return home.", $COLOR_ERROR)
