@@ -130,7 +130,12 @@ Func ExtendedAttackBarCheck($aTroop1stPage, $Remaining)
 					$strinToReturn &= "|" & TroopIndexLookup($aResult[$i][0]) & "#" & $aResult[$i][4] & "#" & $aResult[$i][3]
 				EndIf
 			Next
-			If Not $Remaining Then $g_iTotalAttackSlot = _Min($iSlotExtended + 10, 21)
+			If Not $Remaining Then
+				$g_iTotalAttackSlot = $iSlotExtended + 10
+			Else
+				$g_iTotalAttackSlot = _Max($g_iTotalAttackSlot, $iSlotExtended + 10)
+			EndIf
+
 		EndIf
 	EndIf
 
@@ -140,6 +145,7 @@ Func ExtendedAttackBarCheck($aTroop1stPage, $Remaining)
 EndFunc   ;==>AttackBarCheck
 
 Func DragAttackBar($iTotalSlot = 20, $bBack = False)
+	If $g_iTotalAttackSlot > 10 Then $iTotalSlot = $g_iTotalAttackSlot
 	Local $bAlreadyDrag = False
 	If $bBack = False Then
 		If $g_iDebugSetlog Then Setlog("Dragging attack troop bar to 2nd page. Distance = " & $iTotalSlot - 9 & " slots")
