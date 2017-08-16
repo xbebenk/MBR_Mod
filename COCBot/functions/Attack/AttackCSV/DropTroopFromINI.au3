@@ -87,7 +87,7 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 	Next
 
 	; ExtendedAttackBar - Demen
-	If $troopPosition >=0 And < $g_iTotalAttackSlot - 10 Then ; can only be selected when in 1st page of troopbar
+	If $troopPosition >= 0 And $troopPosition < $g_iTotalAttackSlot - 10 Then ; can only be selected when in 1st page of troopbar
 		If $g_bDraggedAttackBar Then DragAttackBar($g_iTotalAttackSlot, True) ; return drag
 	ElseIf $troopPosition > 10 Then ; can only be selected when in 2nd page of troopbar
 		If $g_bDraggedAttackBar = False Then DragAttackBar($g_iTotalAttackSlot, False) ; drag forward
