@@ -58,6 +58,10 @@ Func PrepareAttack($pMatchMode, $Remaining = False) ;Assigns troops
 	Local $aTemp[12][3]
 
 	; ExtendedAttackBar Demen
+	If Not $Remaining Then ; reset all flag
+		$g_iTotalAttackSlot = 10
+		$g_bDraggedAttackBar = False
+	EndIf
 	ReDim $aTemp[22][3]
 	ReDim $g_avAttackTroops[22][2]
 	; ExtendedAttackBar Demen

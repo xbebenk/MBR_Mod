@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func ExtendedAttackBarCheck($aTroop1stPage)
+Func ExtendedAttackBarCheck($aTroop1stPage, $Remaining)
 
 	Local $x = 0, $y = 659, $x1 = 853, $y1 = 698
 	Static $CheckSlotwHero2 = False
@@ -90,11 +90,22 @@ Func ExtendedAttackBarCheck($aTroop1stPage)
 				EndIf
 			Next
 
+			Local $iSlotExtended = 0
 			For $i = 0 To UBound($aResult) - 1
 				Local $Slottemp
 				If $aResult[$i][1] > 0 Then
 					If $g_iDebugSetlog = 1 Then SetLog("SLOT : " & $i, $COLOR_DEBUG) ;Debug
 					If $g_iDebugSetlog = 1 Then SetLog("Detection : " & $aResult[$i][0] & "|x" & $aResult[$i][1] & "|y" & $aResult[$i][2], $COLOR_DEBUG) ;Debug
+
+					; Check if troop is already in 1st page
+					If IsArray($aTroop1stPage) Then
+						If _ArraySearch($aTroop1stPage, $aResult[$i][0]) <> -1 Then
+							If $g_iDebugSetlog = 1 Then Setlog($aResult[$i][0] & " is already found in 1st page at Slot: " & _ArraySearch($aTroop1stPage, $aResult[$i][0]))
+							ContinueLoop
+						EndIf
+					EndIf
+
+					$iSlotExtended += 1
 					$Slottemp = SlotAttack(Number($aResult[$i][1]), False, False)
 					$Slottemp[0] += 18
 					If $CheckSlotwHero2 And StringInStr($aResult[$i][0], "Spell") = 0 Then $Slottemp[0] -= 14
@@ -104,15 +115,11 @@ Func ExtendedAttackBarCheck($aTroop1stPage)
 						If $g_iDebugSetlog = 1 Then SetLog("OCR : " & $Slottemp[0] & "|SLOT: " & $Slottemp[1], $COLOR_DEBUG) ;Debug
 						If $aResult[$i][0] = "Castle" Or $aResult[$i][0] = "King" Or $aResult[$i][0] = "Queen" Or $aResult[$i][0] = "Warden" Then
 							$aResult[$i][3] = 1
-							$aResult[$i][4] = $Slottemp[1] + 11 ; slot from 11 to 21
 						Else
 							$aResult[$i][3] = Number(getTroopCountBig(Number($Slottemp[0]), 636)) ; For Bigg Numbers , when the troops is selected
-							$aResult[$i][4] = $Slottemp[1] + 11 ; slot from 11 to 21
-							If $aResult[$i][3] = "" Or $aResult[$i][3] = 0 Then
-								$aResult[$i][3] = Number(getTroopCountSmall(Number($Slottemp[0]), 641)) ; For small Numbers
-								$aResult[$i][4] = $Slottemp[1] + 11 ; slot from 11 to 21
-							EndIf
+							If $aResult[$i][3] = "" Or $aResult[$i][3] = 0 Then $aResult[$i][3] = Number(getTroopCountSmall(Number($Slottemp[0]), 641)) ; For small Numbers
 						EndIf
+						$aResult[$i][4] = $iSlotExtended + 10 ; slot from 11 to 21
 					Else
 						Setlog("Problem with Attack bar detection!", $COLOR_RED)
 						SetLog("Detection : " & $aResult[$i][0] & "|x" & $aResult[$i][1] & "|y" & $aResult[$i][2], $COLOR_DEBUG)
@@ -120,15 +127,10 @@ Func ExtendedAttackBarCheck($aTroop1stPage)
 						$aResult[$i][4] = -1
 					EndIf
 
-					If IsArray($aTroop1stPage) Then
-						If _ArraySearch($aTroop1stPage, $aResult[$i][0]) = -1 Or _ArraySearch($aTroop1stPage, $aResult[$i][0]) = 11 Then
-							$strinToReturn &= "|" & TroopIndexLookup($aResult[$i][0]) & "#" & $aResult[$i][4] & "#" & $aResult[$i][3]
-						Else
-							If $g_iDebugSetlog = 1 Then Setlog($aResult[$i][0] & " is already found in 1st page at Slot: " & _ArraySearch($aTroop1stPage, $aResult[$i][0]))
-						EndIf
-					EndIf
+					$strinToReturn &= "|" & TroopIndexLookup($aResult[$i][0]) & "#" & $aResult[$i][4] & "#" & $aResult[$i][3]
 				EndIf
 			Next
+			If Not $Remaining Then $g_iTotalAttackSlot = _Min($iSlotExtended + 10, 21)
 		EndIf
 	EndIf
 
@@ -137,8 +139,19 @@ Func ExtendedAttackBarCheck($aTroop1stPage)
 
 EndFunc   ;==>AttackBarCheck
 
-Func SelectDropTroopExtended($Troop)
-
-	If IsAttackPage() Then Click(82 + ($Troop * 72.5), 595 + $g_iBottomOffsetY, 1, 0, "#0111") ;860x780
-
-EndFunc   ;==>SelectDropTroopExtended
+Func DragAttackBar($iTotalSlot = 20, $bBack = False)
+	Local $bAlreadyDrag = False
+	If $bBack = False Then
+		If $g_iDebugSetlog Then Setlog("Dragging attack troop bar to 2nd page. Distance = " & $iTotalSlot - 9 & " slots")
+		ClickDrag(25 + 73 * ($iTotalSlot - 9), 660, 25, 660, 1000)
+		If _Sleep(1500) Then Return
+		$bAlreadyDrag = True
+	Else
+		If $g_iDebugSetlog Then Setlog("Dragging attack troop bar back to 1st page. Distance = " & $iTotalSlot - 9 & " slots")
+		ClickDrag(25, 660, 25 + 73 * ($iTotalSlot - 9), 660, 1000)
+		If _Sleep(1000) Then Return
+		$bAlreadyDrag = False
+	EndIf
+	$g_bDraggedAttackBar = $bAlreadyDrag
+	Return $bAlreadyDrag
+EndFunc   ;==>DragAttackBar

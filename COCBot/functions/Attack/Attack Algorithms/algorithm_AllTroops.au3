@@ -277,13 +277,6 @@ Func SetSlotSpecialTroops()
 		EndIf
 	Next
 
-	; ExtendedAttackBar - Demen
-	If $g_iClanCastleSlot >= 11 Then $g_iClanCastleSlot -= 11
-	If $g_iKingSlot >= 11 Then $g_iKingSlot -= 11
-	If $g_iQueenSlot >= 11 Then $g_iQueenSlot -= 11
-	If $g_iWardenSlot >= 11 Then $g_iWardenSlot -= 11
-	; ExtendedAttackBar - Demen
-
 	If $g_iDebugSetlog = 1 Then
 		SetLog("SetSlotSpecialTroops() King Slot: " & $g_iKingSlot, $COLOR_DEBUG)
 		SetLog("SetSlotSpecialTroops() Queen Slot: " & $g_iQueenSlot, $COLOR_DEBUG)

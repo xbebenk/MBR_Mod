@@ -87,15 +87,12 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 	Next
 
 	; ExtendedAttackBar - Demen
-	Local $bAlreadyDrag = False
-
-	If $troopPosition >= 11 Then
-		$troopPosition -= 11
-		If $g_iDebugSetlog Then Setlog($troopName & " is in 2nd page. Drag attack bar")
-		ClickDrag(830, 660, 20, 660, 2000)
-		If _Sleep(1500) Then Return
-		$bAlreadyDrag = True
+	If $troopPosition < $g_iTotalAttackSlot - 10 Then ; can only be selected when in 1st page of troopbar
+		If $g_bDraggedAttackBar Then DragAttackBar($g_iTotalAttackSlot, True) ; return drag
+	ElseIf $troopPosition > 10 Then ; can only be selected when in 2nd page of troopbar
+		If $g_bDraggedAttackBar = False Then DragAttackBar($g_iTotalAttackSlot, False) ; drag forward
 	EndIf
+	If $g_bDraggedAttackBar Then $troopPosition -= $g_iTotalAttackSlot - 10
 	; ExtendedAttackBar - Demen
 
 	Local $usespell = True
@@ -136,13 +133,7 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 
 		If $g_iCSVLastTroopPositionDropTroopFromINI <> $troopPosition Then
 			ReleaseClicks()
-
-			If $bAlreadyDrag Then ; ExtendedAttackBar - Demen
-				SelectDropTroopExtended($troopPosition)
-			Else
-				SelectDropTroop($troopPosition) ; select the troop...
-			EndIf
-
+			SelectDropTroop($troopPosition) ; select the troop...
 			$g_iCSVLastTroopPositionDropTroopFromINI = $troopPosition
 			ReleaseClicks()
 		EndIf
@@ -193,25 +184,25 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 							If $debug = True Then
 								Setlog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ", " & $g_iKingSlot & ", -1, -1) ")
 							Else
-								dropHeroes($pixel[0], $pixel[1], $g_iKingSlot, -1, -1)
+								dropHeroes($pixel[0], $pixel[1], $troopPosition, -1, -1) ; was $g_iKingSlot, Demen
 							EndIf
 						Case $eQueen
 							If $debug = True Then
 								Setlog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ",-1," & $g_iQueenSlot & ", -1) ")
 							Else
-								dropHeroes($pixel[0], $pixel[1], -1, $g_iQueenSlot, -1)
+								dropHeroes($pixel[0], $pixel[1], -1, $troopPosition, -1) ; was $g_iQueenSlot, Demen
 							EndIf
 						Case $eWarden
 							If $debug = True Then
 								Setlog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ", -1, -1," & $g_iWardenSlot & ") ")
 							Else
-								dropHeroes($pixel[0], $pixel[1], -1, -1, $g_iWardenSlot)
+								dropHeroes($pixel[0], $pixel[1], -1, -1, $troopPosition) ; was $g_iWardenSlot, Demen
 							EndIf
 						Case $eCastle
 							If $debug = True Then
 								Setlog("dropCC(" & $pixel[0] & ", " & $pixel[1] & ", " & $g_iClanCastleSlot & ")")
 							Else
-								dropCC($pixel[0], $pixel[1], $g_iClanCastleSlot)
+								dropCC($pixel[0], $pixel[1], $troopPosition) ; was $g_iClanCastleSlot, Demen
 							EndIf
 						Case $eLSpell To $eSkSpell
 							If $debug = True Then
@@ -230,14 +221,6 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 
 		ReleaseClicks()
 		;SuspendAndroid($SuspendMode)
-
-		; ExtendedAttackBar - Demen
-		If $bAlreadyDrag Then
-			If $g_iDebugSetlog Then Setlog("Drag attack bar back to 1st page")
-			ClickDrag(20, 660, 830, 660, 2000)
-			If _Sleep(1500) Then Return
-		EndIf
-		; ExtendedAttackBar - Demen
 
 		;sleep time after deploy all troops
 		Local $sleepafter = 0

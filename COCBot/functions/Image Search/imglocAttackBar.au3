@@ -201,10 +201,9 @@ Func AttackBarCheck($Remaining = False)
 		For $i = 0 To UBound($aResult) - 1
 			$aTroop1stPage[$i] = $aResult[$i][0]
 		Next
-		ClickDrag(830, 660, 20, 660, 2000)
-		If _Sleep(1500) Then Return
-		$strinToReturn &= ExtendedAttackBarCheck($aTroop1stPage)
-		ClickDrag(20, 660, 830, 660, 2000)
+		DragAttackBar()
+		$strinToReturn &= ExtendedAttackBarCheck($aTroop1stPage, $Remaining)
+		If Not $Remaining Then DragAttackBar($g_iTotalAttackSlot, True) ; return drag
 	EndIf	; Drag & checking ExtendedAttackBar - Demen
 
 	$strinToReturn = StringTrimLeft($strinToReturn, 1)

@@ -50,3 +50,7 @@ Global $g_aiQueueSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_bNeedLocateLab = True, $g_bLabReady[9]
 Global $g_aLabTimeAcc[8], $g_aLabTime[4] = [0, 0, 0, 0] ; day | hour | minute | time in minutes
 Global $g_aLabTimerStart[8], $g_aLabTimerEnd[8]
+
+; ExtendedAttackBar
+Global $g_bChkExtendedAttackBar, $g_iTotalAttackSlot = 10
+Global $g_bDraggedAttackBar = False ; flag if AttackBar is dragged or not
