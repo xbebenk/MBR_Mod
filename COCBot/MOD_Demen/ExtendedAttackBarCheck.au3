@@ -17,7 +17,7 @@ Func ExtendedAttackBarCheck($aTroop1stPage, $Remaining)
 
 	Local $x = 0, $y = 659, $x1 = 853, $y1 = 698
 	Static $CheckSlotwHero2 = False
-
+	Local $iCCSpell = 0
 	; Setup arrays, including default return values for $return
 	Local $aResult[1][6], $aCoordArray[1][2], $aCoords, $aCoordsSplit, $aValue
 	Local $redLines = "FV"
@@ -63,6 +63,7 @@ Func ExtendedAttackBarCheck($aTroop1stPage, $Remaining)
 				If $g_iDebugSetlog = 1 Then Setlog($aResult[$i][0] & " | $aCoordArray: " & $aCoordArray[0][0] & "-" & $aCoordArray[0][1])
 				;;;;;;;; If exist Castle Spell ;;;;;;;
 				If UBound($aCoords) > 1 And StringInStr($aResult[$i][0], "Spell") <> 0 Then
+					$iCCSpell = 1
 					If $g_iDebugSetlog = 1 Then Setlog($aResult[$i][0] & " detected twice!")
 					Local $aCoordsSplit2 = StringSplit($aCoords[1], ",", $STR_NOCOUNT)
 					If UBound($aCoordsSplit2) = 2 Then
@@ -131,7 +132,7 @@ Func ExtendedAttackBarCheck($aTroop1stPage, $Remaining)
 				EndIf
 			Next
 			If Not $Remaining Then
-				$g_iTotalAttackSlot = $iSlotExtended + 10
+				$g_iTotalAttackSlot = $iSlotExtended + 10 + $iCCSpell
 			Else
 				$g_iTotalAttackSlot = _Max($g_iTotalAttackSlot, $iSlotExtended + 10)
 			EndIf
