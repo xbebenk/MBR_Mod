@@ -52,5 +52,6 @@ Global $g_aLabTimeAcc[8], $g_aLabTime[4] = [0, 0, 0, 0] ; day | hour | minute | 
 Global $g_aLabTimerStart[8], $g_aLabTimerEnd[8]
 
 ; ExtendedAttackBar
-Global $g_bChkExtendedAttackBar, $g_iTotalAttackSlot = 10
-Global $g_bDraggedAttackBar = False ; flag if AttackBar is dragged or not
+Global $g_hChkExtendedAttackBarLB, $g_hChkExtendedAttackBarDB, $g_abChkExtendedAttackBar[2]
+Global $g_iTotalAttackSlot = 10, $g_bDraggedAttackBar = False ; flag if AttackBar is dragged or not
+
