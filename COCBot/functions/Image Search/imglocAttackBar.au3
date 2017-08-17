@@ -37,6 +37,7 @@ Func AttackBarCheck($Remaining = False)
 		$CheckSlotwHero = False
 	EndIf
 
+	If $g_bDraggedAttackBar Then DragAttackBar($g_iTotalAttackSlot, True) ; return drag for the 2nd Recalc - ExtendedAttackBar - Demen
 
 	; Reset to level one the Spells level
 	$g_iLSpellLevel = 1

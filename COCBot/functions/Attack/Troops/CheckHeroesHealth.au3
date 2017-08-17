@@ -21,6 +21,11 @@ Func CheckHeroesHealth()
 		Local $TempKingSlot = $g_iKingSlot
 		Local $TempQueenSlot = $g_iQueenSlot
 		Local $TempWardenSlot = $g_iWardenSlot
+		If $g_iKingSlot >= 11 Or $g_iQueenSlot >= 11 Or $g_iWardenSlot >= 11 Then
+			If $g_bDraggedAttackBar = False Then DragAttackBar($g_iTotalAttackSlot, False) ; drag forward
+		ElseIf $g_iKingSlot >= 0 And $g_iQueenSlot >= 0 And $g_iWardenSlot >= 0 And ($g_iKingSlot < $g_iTotalAttackSlot - 10 Or $g_iQueenSlot < $g_iTotalAttackSlot - 10 Or $g_iWardenSlot < $g_iTotalAttackSlot - 10) Then
+			If $g_bDraggedAttackBar Then DragAttackBar($g_iTotalAttackSlot, True) ; return drag
+		EndIf
 		If $g_bDraggedAttackBar Then
 			$TempKingSlot -= $g_iTotalAttackSlot - 10
 			$TempQueenSlot -= $g_iTotalAttackSlot - 10
