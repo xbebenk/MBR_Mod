@@ -32,3 +32,4 @@
 #include "UpdateLabStatus.au3"
 
 #include "ExtendedAttackBarCheck.au3"
+#include "Attack Now.au3"
