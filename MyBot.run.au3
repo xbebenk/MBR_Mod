@@ -997,6 +997,7 @@ Func Attack() ;Selects which algorithm
 	SetLog(" ====== Start Attack ====== ", $COLOR_SUCCESS)
 	If ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
 		If $g_iDebugSetlog = 1 Then Setlog("start scripted attack", $COLOR_ERROR)
+        If $g_CSVSpeedDivider[$g_iMatchMode] <> 1 Then Setlog("Executing Scripted attack at " & $g_CSVSpeedDivider[$g_iMatchMode] & "x Speed", $COLOR_INFO)
 		Algorithm_AttackCSV()
 	ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 2 Then
 		If $g_iDebugSetlog = 1 Then Setlog("start milking attack", $COLOR_ERROR)

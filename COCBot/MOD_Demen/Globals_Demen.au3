@@ -58,3 +58,7 @@ Global $g_aLabTimerStart[8], $g_aLabTimerEnd[8]
 Global $g_hChkExtendedAttackBarLB, $g_hChkExtendedAttackBarDB, $g_abChkExtendedAttackBar[2]
 Global $g_iTotalAttackSlot = 10, $g_bDraggedAttackBar = False ; flag if AttackBar is dragged or not
 
+; CSV Speed
+Global $g_CSVSpeedDivider[2] = [1, 1] ; default CSVSpeed for DB & LB
+Global $cmbCSVSpeed[2] = [$LB, $DB]
+Global $icmbCSVSpeed[2] = [2, 2]

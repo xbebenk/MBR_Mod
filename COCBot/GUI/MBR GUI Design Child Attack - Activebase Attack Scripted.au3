@@ -68,6 +68,12 @@ Func CreateAttackSearchActiveBaseScripted()
 		   _GUICtrlCreateIcon($g_sLibIconPath, $eIcnCopy, $x + 210, $y + 2, 16, 16)
 			   _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "IconCopy_Info_01", -1))
 			   GUICtrlSetOnEvent(-1, "DuplicateScriptAB")
+
+		   $x = 55
+		   $y += 208
+		   GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "CSVSpeed", -1), $x - 2, $y, -1, -1)
+			   $cmbCSVSpeed[$LB] = GUICtrlCreateCombo("", $x + 122, $y - 5, 50, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+			   GUICtrlSetData(-1, "0.5x|0.75x|1x|1.25x|1.5x|2x|3x|4x|5x", "1x")
 	   GUICtrlCreateGroup("", -99, -99, 1, 1)
 
    ;GUISetState()

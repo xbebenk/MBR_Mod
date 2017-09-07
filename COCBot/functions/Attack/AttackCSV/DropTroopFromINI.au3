@@ -158,7 +158,9 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 				Else
 					$delayDrop = $delayDropMin
 				EndIf
-				debugAttackCSV(">> delay change drop point: " & $delayDrop)
+				debugAttackCSV(">> random delay drop point: " & $delayDrop)
+				$delayDrop = Int($delayDrop / $g_CSVSpeedDivider[$g_iMatchMode])
+				debugAttackCSV(">> delay change drop point: " & $delayDrop & " (x" & $g_CSVSpeedDivider[$g_iMatchMode] & " faster)")
 			EndIf
 
 			For $j = 1 To $numbersOfVectors
@@ -173,9 +175,13 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 					;delay time between 2 drops in same point
 					If $delayPointmin <> $delayPointmax Then
 						Local $delayPoint = Random($delayPointmin, $delayPointmax, 1)
+						debugAttackCSV(">> random delay deploy point: " & $delayPoint)
+						$delayPoint = Int($delayPoint / $g_CSVSpeedDivider[$g_iMatchMode])
 					Else
 						Local $delayPoint = $delayPointmin
+						$delayPoint = Int($delayPoint / $g_CSVSpeedDivider[$g_iMatchMode])
 					EndIf
+					debugAttackCSV(">> delay change deploy Point: " & $delayPoint & " (x" & $g_CSVSpeedDivider[$g_iMatchMode] & " faster)")
 
 					Switch $iTroopIndex
 						Case $eBarb To $eBowl ; drop normal troops
