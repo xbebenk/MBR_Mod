@@ -239,8 +239,9 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 		Else
 			$sleepafter = Int($sleepafterMin)
 		EndIf
+		$sleepafter = Int($sleepafter / $g_CSVSpeedDivider[$g_iMatchMode])
 		If $sleepafter > 0 And IsKeepClicksActive() = False Then
-			debugAttackCSV(">> delay after drop all troops: " & $sleepafter)
+			debugAttackCSV(">> delay after drop all troops: " & $sleepafter & " (x" & $g_CSVSpeedDivider[$g_iMatchMode] & " faster)")
 			If $sleepafter <= 1000 Then ; check SLEEPAFTER value is less than 1 second?
 				If _Sleep($sleepafter) Then Return
 				If $bHeroDrop = True Then  ;Check hero but skip Warden if was dropped with sleepafter to short to allow icon update

@@ -75,7 +75,6 @@ Func AttackNowAB()
 
 	; Attack
 	Attack()
-	ReturnHome($g_bTakeLootSnapShot)
 	$g_bRunState = $RuntimeA
 EndFunc   ;==>AttackNowAB
 
@@ -140,6 +139,5 @@ Func AttackNowDB()
 	FindTownhall(True)
 	; Attack
 	Attack()
-	ReturnHome($g_bTakeLootSnapShot)
 	$g_bRunState = $RuntimeA
 EndFunc   ;==>AttackNowDB
