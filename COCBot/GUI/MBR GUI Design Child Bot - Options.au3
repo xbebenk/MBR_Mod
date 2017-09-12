@@ -100,6 +100,11 @@ Func CreateBotOptions()
 	   $g_hChkCheckGameLanguage = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkCheckGameLanguage", "Check Game Language (EN)"), $x, $y, -1, -1)
 		   _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkCheckGameLanguage_Info_01", "Check if the Game is set to the correct language (Must be set to English)."))
 		   GUICtrlSetState(-1, $GUI_CHECKED)
+		   
+	   $y += 22
+	   $chkAutoHideEmulator = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "Auto Hide Emulator", "Auto hide emulator after start"), $x, $y, -1, -1)
+	      GUICtrlSetOnEvent(-1, "chkAutoHideEmulator")
+	      GUICtrlSetState(-1, $GUI_UNCHECKED) 
 
 	   $y += 22
 	   $g_hChkAutoAlign = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkAutoAlign", "Auto Align"), $x, $y, -1, -1)

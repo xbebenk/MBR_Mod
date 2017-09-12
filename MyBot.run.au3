@@ -610,6 +610,16 @@ Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
 
 	While 1
+	     ; samm0d - auto hide emulator
+			If $g_bChkAutoHideEmulator Then
+				If $g_bFlagHideEmulator = False Then
+					If $g_bIsHidden = False Then
+						btnHide()
+						$g_bFlagHideEmulator = True
+					EndIf
+				EndIf
+			EndIf
+			
 		;Check for debug wait command
 		If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then
 			While (FileReadLine(@ScriptDir & "\EnableMBRDebug.txt") = "wait")
