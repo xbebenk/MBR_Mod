@@ -90,14 +90,18 @@ Func chkUseRandomClick()
 	$g_bUseRandomClick = (GUICtrlRead($g_hChkUseRandomClick) = $GUI_CHECKED)
 EndFunc   ;==>chkUseRandomClick
 #cs
-	Func chkUpdatingWhenMinimized()
-	$g_bUpdatingWhenMinimized = (GUICtrlRead($g_hChkUpdatingWhenMinimized) = $GUI_CHECKED)
-	EndFunc   ;==>chkUpdatingWhenMinimized
+Func chkUpdatingWhenMinimized()
+$g_bUpdatingWhenMinimized = (GUICtrlRead($g_hChkUpdatingWhenMinimized) = $GUI_CHECKED)
+EndFunc   ;==>chkUpdatingWhenMinimized
 #ce
 Func chkHideWhenMinimized()
 	$g_bHideWhenMinimized = (GUICtrlRead($g_hChkHideWhenMinimized) = $GUI_CHECKED)
 	TrayItemSetState($g_hTiHide, ($g_bHideWhenMinimized = 1 ? $TRAY_CHECKED : $TRAY_UNCHECKED))
 EndFunc   ;==>chkHideWhenMinimized
+
+Func chkAutoHideEmulator()
+	$g_bChkAutoHideEmulator = (GUICtrlRead($chkAutoHideEmulator) = $GUI_CHECKED)
+EndFunc
 
 Func chkScreenshotType()
 	$g_bScreenshotPNGFormat = (GUICtrlRead($g_hChkScreenshotType) = $GUI_CHECKED)
