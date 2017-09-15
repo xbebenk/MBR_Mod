@@ -580,6 +580,9 @@ Global Const $g_asModeText[6] = ["Dead Base", "Live Base", "TH Snipe", "Milking 
 
 ;xbenk
 Global $btnAttNowLB
+Global $eLootPerc = 0
+Global $starsearned = 0
+Global $eTHLevel = "-"
 
 ; Troops
 Global Enum $eTroopBarbarian, $eTroopArcher, $eTroopGiant, $eTroopGoblin, $eTroopWallBreaker, $eTroopBalloon, _
