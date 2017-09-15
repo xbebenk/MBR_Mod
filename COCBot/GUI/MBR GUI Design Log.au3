@@ -53,6 +53,10 @@ Func CreateLogTab()
 						 GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_05", "Full Bot Log, Hide Attack Log") & "|" & _
 						 GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_06", "Hide Bot Log, Full Attack Log") , GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_01", -1))
 	  GUICtrlSetOnEvent(-1, "cmbLog")
+	
+   ;xbenk
+   $btnAttNowLB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Log", "BtnAttack", "Attack"), $x+218, $y-1, 44, 23)
+				GUICtrlSetOnEvent(-1, "AttackNowLB")
 
    $g_hBtnAtkLogClear = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogClear", "Clear Atk. Log"), $x + 270, $y - 1, 80, 23)
 	  GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
