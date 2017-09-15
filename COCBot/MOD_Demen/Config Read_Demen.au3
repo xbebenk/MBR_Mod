@@ -54,6 +54,7 @@ EndFunc   ;==>ReadConfig_SmartTrain
 
 Func ReadConfig_SwitchAcc()
 	IniReadS($ichkSwitchAcc, $profile, "SwitchAcc", "Enable", 0, "int")
+	IniReadS($ichkSwitchAccShared_pref, $profile, "SwitchAcc", "Shared_Pref", 0, "int")
 	IniReadS($icmbTotalCoCAcc, $profile, "SwitchAcc", "Total Coc Account", -1, "int")
 	IniReadS($ichkSmartSwitch, $profile, "SwitchAcc", "Smart Switch", 0, "int")
 	IniReadS($g_iTrainTimeToSkip, $profile, "SwitchAcc", "Train Time To Skip", 1, "int")

@@ -47,6 +47,7 @@ Func SaveConfig_SwitchAcc()
 	ApplyConfig_SwitchAcc("Save")
 
 	IniWriteS($profile, "SwitchAcc", "Enable", $ichkSwitchAcc ? 1 : 0)
+	IniWriteS($profile, "SwitchAcc", "Shared_Pref", $ichkSwitchAccShared_pref ? 1 : 0)
 	IniWriteS($profile, "SwitchAcc", "Total Coc Account", $icmbTotalCoCAcc) ; 1 = 1 Acc, 2 = 2 Acc, etc.
 	IniWriteS($profile, "SwitchAcc", "Smart Switch", $ichkSmartSwitch ? 1 : 0)
 	IniWriteS($profile, "SwitchAcc", "Train Time To Skip", $g_iTrainTimeToSkip)

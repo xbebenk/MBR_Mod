@@ -80,6 +80,7 @@ Func ApplyConfig_SwitchAcc($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			GUICtrlSetState($chkSwitchAcc, $ichkSwitchAcc = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($chkSwitchAccShared_pref, $ichkSwitchAccShared_pref = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkSwitchAcc()
 			If $ichkSmartSwitch = 1 Then
 				GUICtrlSetState($radSmartSwitch, $GUI_CHECKED)
@@ -110,6 +111,7 @@ Func ApplyConfig_SwitchAcc($TypeReadSave)
 
 		Case "Save"
 			$ichkSwitchAcc = GUICtrlRead($chkSwitchAcc) = $GUI_CHECKED ? 1 : 0
+			$ichkSwitchAccShared_pref = GUICtrlRead($chkSwitchAccShared_pref) = $GUI_CHECKED ? 1 : 0
 			$icmbTotalCoCAcc = _GUICtrlComboBox_GetCurSel($cmbTotalAccount) + 1
 			$ichkSmartSwitch = GUICtrlRead($radSmartSwitch) = $GUI_CHECKED ? 1 : 0
 			$g_iTrainTimeToSkip = _GUICtrlComboBox_GetCurSel($g_hCmbTrainTimeToSkip) + 1

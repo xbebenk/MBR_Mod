@@ -24,7 +24,7 @@ Global Const $g_aaiEdgeDropPoints[4] = [$g_aaiBottomRightDropPoints, $g_aaiTopLe
 
 ; SwitchAcc_Demen_Style
 Global $profile = $g_sProfilePath & "\Profile.ini"
-Global $ichkSwitchAcc = 0, $icmbTotalCoCAcc, $nTotalCoCAcc = 8, $ichkSmartSwitch, $ichkCloseTraining
+Global $ichkSwitchAcc = 0, $ichkSwitchAccShared_pref = 0, $icmbTotalCoCAcc, $nTotalCoCAcc = 8, $ichkSmartSwitch, $ichkCloseTraining
 Global Enum $eNull, $eActive, $eDonate, $eIdle, $eStay, $eContinuous ; Enum for Profile Type & Switch Case & ForceSwitch
 Global $ichkForceSwitch, $iForceSwitch, $eForceSwitch = 0, $iProfileBeforeForceSwitch
 Global $ichkForceStayDonate

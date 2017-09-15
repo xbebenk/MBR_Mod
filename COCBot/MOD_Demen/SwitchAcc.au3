@@ -427,104 +427,113 @@ Func SwitchCOCAcc()
 	EndIf
 
 	Setlog("Switching to Account [" & $NextAccount & "]")
+	If $ichkSwitchAccShared_pref Then
+		Setlog("Using SamMod, Shared_Prefs")
+		Setlog("Next Account: " & $g_sProfileCurrentName & " acc: " & $NextAccount)
+		loadVillageFrom($g_sProfileCurrentName)
+		$bReMatchAcc = False
+		$g_abNotNeedAllTime[0] = 1
+		$g_abNotNeedAllTime[1] = 1
+		$aAttackedCountSwitch[$nCurProfile - 1] = $aAttackedCountAcc[$nCurProfile - 1]
+	Else
+		PureClick(820, 585, 1, 0, "Click Setting") ;Click setting
+		If _Sleep(500) Then Return
 
-	PureClick(820, 585, 1, 0, "Click Setting") ;Click setting
-	If _Sleep(500) Then Return
+		$idx = 0
+		While $idx <= 15 ; Checking Green Connect Button continuously in 15sec
+			If _ColorCheck(_GetPixelColor(408, 408, True), "D0E878", 20) Then ;	Green
+				PureClick(440, 420, 2, 1000) ;	Click Connect & Disconnect
+				If _Sleep(500) Then Return
+				Setlog("   1. Click connect & disconnect")
+				ExitLoop
+			ElseIf _ColorCheck(_GetPixelColor(408, 408, True), "F07077", 20) Then ; 	Red
+				PureClick(440, 420) ;	Click Disconnect
+				If _Sleep(500) Then Return
+				Setlog("   1. Click disconnect")
+				ExitLoop
+			Else
+				If _Sleep(900) Then Return
+				$idx += 1
+				If $idx = 15 Then SwitchFail_runBot()
+			EndIf
+		WEnd
 
-	$idx = 0
-	While $idx <= 15 ; Checking Green Connect Button continuously in 15sec
-		If _ColorCheck(_GetPixelColor(408, 408, True), "D0E878", 20) Then ;	Green
-			PureClick(440, 420, 2, 1000) ;	Click Connect & Disconnect
-			If _Sleep(500) Then Return
-			Setlog("   1. Click connect & disconnect")
-			ExitLoop
-		ElseIf _ColorCheck(_GetPixelColor(408, 408, True), "F07077", 20) Then ; 	Red
-			PureClick(440, 420) ;	Click Disconnect
-			If _Sleep(500) Then Return
-			Setlog("   1. Click disconnect")
-			ExitLoop
-		Else
-			If _Sleep(900) Then Return
-			$idx += 1
-			If $idx = 15 Then SwitchFail_runBot()
-		EndIf
-	WEnd
+		$idx = 0
+		While $idx <= 15 ; Checking Account List continuously in 15sec
+			If _ColorCheck(_GetPixelColor(600, 310, True), "FFFFFF", 20) Then ;	Grey
+				PureClick(383, $YCoord) ;	Click Account
+				Setlog("   2. Click account [" & $NextAccount & "]")
+				If _Sleep(1000) Then Return
+				ExitLoop
+			ElseIf _ColorCheck(_GetPixelColor(408, 408, True), "F07077", 20) And $idx = 6 Then ; 	Red, double click did not work, try click Disconnect 1 more time
+				PureClick(440, 420) ;	Click Disconnect
+				Setlog("   1.5. Click disconnect again")
+				If _Sleep(500) Then Return
+			Else
+				If _Sleep(900) Then Return
+				$idx += 1
+				If $idx = 15 Then SwitchFail_runBot()
+			EndIf
+		WEnd
 
-	$idx = 0
-	While $idx <= 15 ; Checking Account List continuously in 15sec
-		If _ColorCheck(_GetPixelColor(600, 310, True), "FFFFFF", 20) Then ;	Grey
-			PureClick(383, $YCoord) ;	Click Account
-			Setlog("   2. Click account [" & $NextAccount & "]")
-			If _Sleep(1000) Then Return
-			ExitLoop
-		ElseIf _ColorCheck(_GetPixelColor(408, 408, True), "F07077", 20) And $idx = 6 Then ; 	Red, double click did not work, try click Disconnect 1 more time
-			PureClick(440, 420) ;	Click Disconnect
-			Setlog("   1.5. Click disconnect again")
-			If _Sleep(500) Then Return
-		Else
-			If _Sleep(900) Then Return
-			$idx += 1
-			If $idx = 15 Then SwitchFail_runBot()
-		EndIf
-	WEnd
+		$idx = 0
+		While $idx <= 15 ; Checking Load Button continuously in 15sec
+			If _ColorCheck(_GetPixelColor(408, 408, True), "D0E878", 20) Then ; Already in current account
+				Setlog("Already in current account")
+				PureClickP($aAway, 2, 0, "#0167") ;Click Away
+				If _Sleep(1000) Then Return
+				$bReMatchAcc = False
+				ExitLoop
 
-	$idx = 0
-	While $idx <= 15 ; Checking Load Button continuously in 15sec
-		If _ColorCheck(_GetPixelColor(408, 408, True), "D0E878", 20) Then ; Already in current account
-			Setlog("Already in current account")
-			PureClickP($aAway, 2, 0, "#0167") ;Click Away
-			If _Sleep(1000) Then Return
-			$bReMatchAcc = False
-			ExitLoop
+			ElseIf _ColorCheck(_GetPixelColor(480, 441, True), "60B010", 20) Then ; Load Button
+				PureClick(443, 430, 1, 0, "Click Load") ;Click Load
+				Setlog("   3. Click load button")
 
-		ElseIf _ColorCheck(_GetPixelColor(480, 441, True), "60B010", 20) Then ; Load Button
-			PureClick(443, 430, 1, 0, "Click Load") ;Click Load
-			Setlog("   3. Click load button")
+				$idx2 = 0
+				While $idx2 <= 15 ; Checking Text Box continuously in 15sec
+					If _ColorCheck(_GetPixelColor(585, 16, True), "F88088", 20) Then ; Pink (close icon)
+						PureClick(360, 195, 1, 0, "Click Text box")
+						Setlog("   4. Click text box")
+						If _Sleep(500) Then Return
+						AndroidSendText("CONFIRM")
+						ExitLoop
+					Else
+						If _Sleep(900) Then Return
+						$idx2 = $idx2 + 1
+						If $idx2 = 15 Then SwitchFail_runBot()
+					EndIf
+				WEnd
 
-			$idx2 = 0
-			While $idx2 <= 15 ; Checking Text Box continuously in 15sec
-				If _ColorCheck(_GetPixelColor(585, 16, True), "F88088", 20) Then ; Pink (close icon)
-					PureClick(360, 195, 1, 0, "Click Text box")
-					Setlog("   4. Click text box")
-					If _Sleep(500) Then Return
-					AndroidSendText("CONFIRM")
-					ExitLoop
-				Else
-					If _Sleep(900) Then Return
-					$idx2 = $idx2 + 1
-					If $idx2 = 15 Then SwitchFail_runBot()
-				EndIf
-			WEnd
+				$idx3 = 0
+				While $idx3 <= 10 ; Checking OKAY Button continuously in 10sec
+					If _ColorCheck(_GetPixelColor(480, 200, True), "71BB1E", 20) Then
+						PureClick(480, 200, 1, 0, "Click OKAY") ;Click OKAY
+						Setlog("   5. Click OKAY")
+						ExitLoop
+					Else
+						If _Sleep(900) Then Return
+						$idx3 = $idx3 + 1
+						If $idx2 = 10 Then SwitchFail_runBot()
+					EndIf
+				WEnd
 
-			$idx3 = 0
-			While $idx3 <= 10 ; Checking OKAY Button continuously in 10sec
-				If _ColorCheck(_GetPixelColor(480, 200, True), "71BB1E", 20) Then
-					PureClick(480, 200, 1, 0, "Click OKAY") ;Click OKAY
-					Setlog("   5. Click OKAY")
-					ExitLoop
-				Else
-					If _Sleep(900) Then Return
-					$idx3 = $idx3 + 1
-					If $idx2 = 10 Then SwitchFail_runBot()
-				EndIf
-			WEnd
+				Setlog("please wait for loading CoC")
+				$bReMatchAcc = False
+				$g_abNotNeedAllTime[0] = 1
+				$g_abNotNeedAllTime[1] = 1
+				$aAttackedCountSwitch[$nCurProfile - 1] = $aAttackedCountAcc[$nCurProfile - 1]
 
-			Setlog("please wait for loading CoC")
-			$bReMatchAcc = False
-			$g_abNotNeedAllTime[0] = 1
-			$g_abNotNeedAllTime[1] = 1
-			$aAttackedCountSwitch[$nCurProfile - 1] = $aAttackedCountAcc[$nCurProfile - 1]
+				If IsMainPage(100) Then ExitLoop; Waiting for fully load CoC in 10 sec
+				ExitLoop
 
-			If IsMainPage(100) Then ExitLoop; Waiting for fully load CoC in 10 sec
-			ExitLoop
+			Else
+				If _Sleep(900) Then Return
+				$idx += 1
+				If $idx = 15 Then SwitchFail_runBot()
 
-		Else
-			If _Sleep(900) Then Return
-			$idx += 1
-			If $idx = 15 Then SwitchFail_runBot()
-
-		EndIf
-	WEnd
+			EndIf
+		WEnd
+	EndIf
 
 EndFunc   ;==>SwitchCOCAcc
 

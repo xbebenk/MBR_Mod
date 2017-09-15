@@ -15,7 +15,7 @@
 
 ; SwitchAcc_Demen
 Global $lblProfileNo[8], $lblProfileName[8], $cmbAccountNo[8], $cmbProfileType[8]
-Global $chkSwitchAcc = 0, $cmbTotalAccount = 0, $radNormalSwitch = 0, $radSmartSwitch = 0, $chkUseTrainingClose = 0, $radCloseCoC = 0, $radCloseAndroid = 0, $cmbLocateAcc = 0, $g_hCmbTrainTimeToSkip = 0
+Global $chkSwitchAcc = 0, $chkSwitchAccShared_pref = 0, $cmbTotalAccount = 0, $radNormalSwitch = 0, $radSmartSwitch = 0, $chkUseTrainingClose = 0, $radCloseCoC = 0, $radCloseAndroid = 0, $cmbLocateAcc = 0, $g_hCmbTrainTimeToSkip = 0
 Global $g_hChkForceSwitch = 0, $g_txtForceSwitch = 0, $g_lblForceSwitch = 0, $g_hChkForceStayDonate = 0
 Global $g_StartHideSwitchAcc = 0, $g_SecondHideSwitchAcc, $g_EndHideSwitchAcc = 0
 
@@ -104,7 +104,13 @@ Func CreateBotSwitchAcc()
 
 	; Profiles & Account matching
 	Local $x = 235, $y = 120
-
+	
+	;xbenk
+	GUICtrlCreateGroup(GetTranslated(109, 37, "Profiles"), $x - 20, $y - 20, 225, 295)
+	$chkSwitchAccShared_pref = GUICtrlCreateCheckbox(GetTranslated("sam m0d", 37, "Enable Shared_Pref Switch"), $x + 15, $y - 45, -1, -1)
+	$sTxtTip = GetTranslated("sam m0d", 38, "Enable Sam Mod Shared Prefs Switching Method")
+	GUICtrlSetTip(-1, $sTxtTip)
+	
 	GUICtrlCreateGroup(GetTranslated(109, 37, "Profiles"), $x - 20, $y - 20, 225, 295)
 	GUICtrlCreateButton(GetTranslated(109, 38, "Update Profiles"), $x + 40, $y - 5, -1, 25)
 	GUICtrlSetOnEvent(-1, "g_btnUpdateProfile")
