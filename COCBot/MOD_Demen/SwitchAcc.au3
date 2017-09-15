@@ -546,3 +546,295 @@ Func DisableGUI_AfterLoadNewProfile()
 	ControlEnable("","",$g_hCmbGUILanguage)
 	$g_bGUIControlDisabled = False
 EndFunc   ;==>DisableGUI_AfterLoadNewProfile
+
+
+Func btnMakeSwitchADBFolder()
+	Local $currentRunState = $g_bRunState
+	Local $bFileFlag = 0
+	Local $iCount = 0
+	Local $bshared_prefs_file = False
+	Local $bVillagePng = False
+	Local $sMyProfilePath4shared_prefs = @ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\shared_prefs"
+
+	$g_bRunState = True
+
+	_GUICtrlTab_ClickTab($g_hTabMain, 0)
+	SetLog(_PadStringCenter(" Start ", 50, "="),$COLOR_INFO)
+	If _Sleep(200) Then Return False
+	checkMainScreen(False, False)
+	If _Sleep(200) Then Return False
+
+	; remove old village before new copy
+	If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\village_92.png") Then
+		SetLog("Removing previous village_92.png", $COLOR_INFO)
+		FileDelete(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\village_92.png")
+		If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\village_92.png") Then
+			SetLog("Cannot remove previous village_92.png", $COLOR_INFO)
+		Else
+			SetLog("Previous village_92.png removed.", $COLOR_INFO)
+		EndIf
+	EndIf
+	If FileExists($sMyProfilePath4shared_prefs) Then
+		SetLog("Removing previous shared_prefs", $COLOR_INFO)
+		DirRemove($sMyProfilePath4shared_prefs, 1)
+		If FileExists($sMyProfilePath4shared_prefs) Then
+			SetLog("Cannot remove previous shared_prefs", $COLOR_INFO)
+		Else
+			SetLog("Previous shared_prefs removed.", $COLOR_INFO)
+		EndIf
+	EndIf
+
+	;;;;If Not _CheckColorPixel($aButtonClose3[4], $aButtonClose3[5], $aButtonClose3[6], $aButtonClose3[7], $g_bCapturePixel, "aButtonClose3") Then
+		ClickP($aAway, 1, 0, "#0221") ;Click Away
+		If _Sleep($DELAYPROFILEREPORT1) Then Return
+		If _CheckColorPixel($aIsMain[0], $aIsMain[1], $aIsMain[2], $aIsMain[3], $g_bCapturePixel, "aIsMain") Then
+			Click(30, 40, 1, 0, "#0222") ; Click Info Profile Button
+			; Waiting for profile page fully load.
+			ForceCaptureRegion()
+			$iCount = 0
+			While 1
+				_CaptureRegion()
+				If _ColorCheck(_GetPixelColor(250, 95, $g_bNoCapturePixel), Hex(0XE8E8E0,6), 10) = True And _ColorCheck(_GetPixelColor(360, 145, $g_bNoCapturePixel), Hex(0XE8E8E0,6), 10) = False Then
+					ExitLoop
+				EndIf
+				If _Sleep(250) Then Return False
+				$iCount += 1
+				If $iCount > 40 Then ExitLoop
+			WEnd
+		Else
+			SetLog("Unable to locate main screen.", $COLOR_ERROR)
+			Return
+		EndIf
+	;;;;EndIf
+
+	_CaptureRegion()
+	;If _CheckColorPixel($aButtonClose3[4], $aButtonClose3[5], $aButtonClose3[6], $aButtonClose3[7], $g_bNoCapturePixel, "aButtonClose3") Then
+		Local $iSecondBaseTabHeight
+		If _CheckColorPixel(146,146,0XB8B8A8,10,$g_bNoCapturePixel,"Profile Check Builder Base Tab") = True Then
+			$iSecondBaseTabHeight = 49
+		Else
+			$iSecondBaseTabHeight = 0
+		EndIf
+
+		Local $hClone = _GDIPlus_BitmapCloneArea($g_hBitmap, 70,127 + $iSecondBaseTabHeight, 80,17, $GDIP_PXF24RGB)
+		_GDIPlus_ImageSaveToFile($hClone, @ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\village_92.png")
+		If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\village_92.png") Then
+			SetLog("village_92.png captured.", $COLOR_INFO)
+			$bFileFlag = BitOR($bFileFlag, 2)
+		EndIf
+
+		;If $g_sAndroidGameDistributor = $g_sGoogle Then
+		;	ClickP($aAway,1,0)
+		;	If _Sleep(250) Then Return False
+		;	Click($aButtonSetting[0],$aButtonSetting[1],1,0,"#Setting")
+		;	If Not _Wait4Pixel($aButtonClose2[4], $aButtonClose2[5], $aButtonClose2[6], $aButtonClose2[7], 1500, 100) Then
+		;		SetLog("Cannot load setting page, restart game...", $COLOR_RED)
+		;	EndIf
+		;	If _CheckColorPixel($aButtonGoogleConnectGreen[4], $aButtonGoogleConnectGreen[5], $aButtonGoogleConnectGreen[6], $aButtonGoogleConnectGreen[7], $g_bCapturePixel, "aButtonGoogleConnectGreen") Then
+		;		Click($aButtonGoogleConnectGreen[0],$aButtonGoogleConnectGreen[1],1,0,"#ConnectGoogle")
+		;	EndIf
+		;	If Not _Wait4Pixel($aButtonGoogleConnectRed[4], $aButtonGoogleConnectRed[5], $aButtonGoogleConnectRed[6], $aButtonGoogleConnectRed[7], 1500, 100) Then
+		;		SetLog("Cannot disconnect to google.", $COLOR_RED)
+		;	Else
+		;		SetLog("Disconnected to google.", $COLOR_INFO)
+		;	EndIf
+		;	ClickP($aAway,1,0)
+		;	If Not _Wait4Pixel($aIsMain[0], $aIsMain[1], $aIsMain[2], $aIsMain[3], 1500, 100) Then
+		;		SetLog("Cannot back to main screen.", $COLOR_RED)
+		;	EndIf
+		;EndIf
+
+		Local $lResult
+
+		PoliteCloseCoC()
+		;If _Sleep(1500) Then Return False
+
+		;If $g_iSamM0dDebug = 1 Then SetLog("$g_sEmulatorInfo4MySwitch: " & $g_sEmulatorInfo4MySwitch)
+
+		$lResult = RunWait($g_sAndroidAdbPath & " -s " & $g_sAndroidAdbDevice & " shell "& Chr(34) & "su -c 'chmod 777 /data/data/" & $g_sAndroidGamePackage & "/shared_prefs; mkdir /sdcard/tempshared; cp /data/data/" & $g_sAndroidGamePackage & _
+		"/shared_prefs/* /sdcard/tempshared; exit; exit'" & Chr(34), "", @SW_HIDE)
+		If $lResult = 0 Then
+			$lResult = RunWait($g_sAndroidAdbPath & " -s " & $g_sAndroidAdbDevice & " pull /sdcard/tempshared " & Chr(34) & $sMyProfilePath4shared_prefs & Chr(34), "", @SW_HIDE)
+			If $lResult = 0 Then
+				$lResult = RunWait($g_sAndroidAdbPath & " -s " & $g_sAndroidAdbDevice & " shell "& Chr(34) & "su -c 'rm -r /sdcard/tempshared; exit; exit'" & Chr(34), "", @SW_HIDE)
+			EndIf
+		EndIf
+
+		If @error Then
+			SetLog("Failed to run adb command.", $COLOR_ERROR)
+		Else
+			If $lResult = 0 Then
+				If FileExists($sMyProfilePath4shared_prefs & "\storage.xml") Then
+					SetLog("shared_prefs captured.", $COLOR_INFO)
+					$bFileFlag = BitOR($bFileFlag, 1)
+				EndIf
+			Else
+				SetLog("Failed to run operate adb command.", $COLOR_ERROR)
+			EndIf
+		EndIf
+
+		Switch $bFileFlag
+			Case 3
+				SetLog(GetTranslatedFileIni("sam m0d", "MySwitch_Capture_Msg1", "Sucess: shared_prefs copied and village_92.png captured."), $COLOR_INFO)
+			Case 2
+				SetLog(GetTranslatedFileIni("sam m0d", "MySwitch_Capture_Msg2", "Failed to copy shared_prefs from emulator, but village_92.png captured."), $COLOR_ERROR)
+			Case 1
+				SetLog(GetTranslatedFileIni("sam m0d", "MySwitch_Capture_Msg3", "Failed to capture village_92.png from emulator, but shared_prefs copied."), $COLOR_ERROR)
+			Case Else
+				SetLog(GetTranslatedFileIni("sam m0d", "MySwitch_Capture_Msg4", "Failed to copy shared_prefs and capture village_92.png from emulator."), $COLOR_ERROR)
+		EndSwitch
+		OpenCoC()
+		Wait4Main()
+	;Else
+	;	SetLog(GetTranslatedFileIni("sam m0d", "MySwitch_Capture_Shared_Prefs_Error", "Please open emulator and coc, then go to profile page before doing this action."), $COLOR_ERROR)
+	;EndIf
+
+	SetLog(_PadStringCenter(" End ", 50, "="),$COLOR_INFO)
+	$g_bRunState = $currentRunState
+EndFunc
+
+Func btnPushshared_prefs()
+	Local $currentRunState = $g_bRunState
+	$g_bRunState = True
+
+	SetLog("Start")
+	PoliteCloseCoC()
+	;If _Sleep(1500) Then Return False
+	Local $lResult
+	Local $sMyProfilePath4shared_prefs = @ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\shared_prefs"
+	Local $hostPath = $g_sAndroidPicturesHostPath & $g_sAndroidPicturesHostFolder & "shared_prefs"
+	Local $androidPath = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/") & "shared_prefs/"
+
+	If FileExists($sMyProfilePath4shared_prefs & "\storage.xml") Then
+		$lResult = DirCopy($sMyProfilePath4shared_prefs, $hostPath, 1)
+		If $lResult = 1 Then
+			$lResult = RunWait($g_sAndroidAdbPath & " -s " & $g_sAndroidAdbDevice & " shell "& Chr(34) & "su -c 'chmod 777 /data/data/" & $g_sAndroidGamePackage & "/shared_prefs; " & _
+			"cp -r " & $androidPath & "* /data/data/" & $g_sAndroidGamePackage & "/shared_prefs; cd /data/data/" & $g_sAndroidGamePackage & "/shared_prefs; " & _
+			"find -name 'com.facebook.internal.preferences.APP_SETTINGS.xml' -type f -exec rm -f {} +; " & _
+			"find -name 'com.google.android.gcm.xml' -type f -exec rm -f {} +; " & _
+			"find -name 'com.mobileapptracking.xml' -type f -exec rm -f {} +; " & _
+			"find -name '*.bak' -type f -exec rm -f {} +; " & _
+			"exit; exit'" & Chr(34), "", @SW_HIDE)
+
+			;"find -name 'HSJsonData.xml' -type f -exec rm -f {} +; " & _
+			;"find -name 'mat_queue.xml' -type f -exec rm -f {} +; " & _
+			;"find -name 'openudid_prefs.xml' -type f -exec rm -f {} +; " & _
+			;"find -name 'localPrefs.xml' -type f -exec rm -f {} +; " & _
+
+			DirRemove($hostPath, 1)
+		EndIf
+		If $lResult = 0 Then
+			SetLog("shared_prefs copy to emulator should be okay.", $COLOR_INFO)
+			OpenCoC()
+			Wait4Main()
+		EndIf
+	Else
+		SetLog($sMyProfilePath4shared_prefs & "\storage.xml not found.", $COLOR_ERROR)
+	EndIf
+	SetLog("Finish")
+	$g_bRunState = $currentRunState
+EndFunc
+
+Func Wait4Main($bBuilderBase = False)
+	Local $iCount
+	For $i = 0 To 105
+		$iCount += 1
+		If $iCount > 120 Then ExitLoop
+		;Setlog("Wait4Main Loop = " & $i & "   ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
+		ClickP($aAway, 1, 0, "#0221") ;Click Away
+		ForceCaptureRegion()
+		_CaptureRegion()
+		If _CheckColorPixel($aIsMain[0], $aIsMain[1], $aIsMain[2], $aIsMain[3], $g_bNoCapturePixel, "aIsMain") Then
+			Setlog("Main Village - Screen cleared, Wait4Main exit", $COLOR_DEBUG)
+			Return True
+		ElseIf _CheckColorPixel($aIsOnBuilderIsland[0], $aIsOnBuilderIsland[1], $aIsOnBuilderIsland[2], $aIsOnBuilderIsland[3], $g_bNoCapturePixel, "aIsOnBuilderIsland") Then
+			If Not $bBuilderBase Then
+				ZoomOut()
+				SwitchBetweenBases()
+				If $i <> 0 Then $i -= 1
+				ContinueLoop
+			EndIf
+			Setlog("Builder Base - Screen cleared, Wait4Main exit", $COLOR_DEBUG)
+			Return True
+		Else
+			If TestCapture() = False And _Sleep($DELAYWAITMAINSCREEN1) Then Return
+			; village was attacked okay button
+			If _ColorCheck(_GetPixelColor(402, 516, $g_bNoCapturePixel), Hex(0xFFFFFF, 6), 5) And _ColorCheck(_GetPixelColor(405, 537, $g_bNoCapturePixel), Hex(0x5EAC10, 6), 20) Then
+				;Click($aButtonVillageWasAttackOK[0],$aButtonVillageWasAttackOK[1],1,0,"#VWAO")
+				PureClick(344, 430, 1, 0, "Click OKAY") ;Click OKAY
+				$g_abNotNeedAllTime[0] = True
+				$g_abNotNeedAllTime[1] = True
+				$g_bIsClientSyncError = False
+				If _Sleep(500) Then Return True
+				$i = 0
+				ContinueLoop
+			EndIf
+			_CaptureRegion2Sync()
+			If _checkObstacles() Then $i = 0
+		EndIf
+	Next
+	Return False
+EndFunc
+
+Func _CheckColorPixel($x, $y, $sColor, $iColorVariation, $bFCapture = True, $sMsglog = Default)
+	Local $hPixelColor = _GetPixelColor2($x, $y, $bFCapture)
+	Local $bFound = _ColorCheck($hPixelColor, Hex($sColor,6), Int($iColorVariation))
+	Local $COLORMSG = ($bFound = True ? $COLOR_BLUE : $COLOR_RED)
+	;If $sMsglog <> Default And IsString($sMsglog) Then
+	;	Local $String = $sMsglog & " - Ori Color: " & Hex($sColor,6) & " at X,Y: " & $x & "," & $y & " Found: " & $hPixelColor
+	;	SetLog($String, $COLORMSG)
+	;EndIf
+	Return $bFound
+EndFunc
+
+Func _GetPixelColor2($iX, $iY, $bNeedCapture = False)
+	Local $aPixelColor = 0
+	If $bNeedCapture = False Or $g_bRunState = False Then
+		$aPixelColor = _GDIPlus_BitmapGetPixel($g_hBitmap, $iX, $iY)
+	Else
+		_CaptureRegion($iX - 1, $iY - 1, $iX + 1, $iY + 1)
+		$aPixelColor = _GDIPlus_BitmapGetPixel($g_hBitmap, 1, 1)
+	EndIf
+	Return Hex($aPixelColor, 6)
+EndFunc   ;==>_GetPixelColors
+
+Func loadVillageFrom($Profilename)
+	PoliteCloseCoC()
+	;If _Sleep(1500) Then Return False
+	Local $lResult
+	Local $sMyProfilePath4shared_prefs = @ScriptDir & "\profiles\" & $Profilename & "\shared_prefs"
+	Local $hostPath = $g_sAndroidPicturesHostPath & $g_sAndroidPicturesHostFolder & "shared_prefs"
+	Local $androidPath = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/") & "shared_prefs/"
+
+	$lResult = DirCopy($sMyProfilePath4shared_prefs, $hostPath, 1)
+	If $lResult = 1 Then
+		$lResult = RunWait($g_sAndroidAdbPath & " -s " & $g_sAndroidAdbDevice & " shell "& Chr(34) & "su -c 'chmod 777 /data/data/" & $g_sAndroidGamePackage & "/shared_prefs; " & _
+		"cp -r " & $androidPath & "* /data/data/" & $g_sAndroidGamePackage & "/shared_prefs; cd /data/data/" & $g_sAndroidGamePackage & "/shared_prefs; " & _
+		"find -name 'com.facebook.internal.preferences.APP_SETTINGS.xml' -type f -exec rm -f {} +; " & _
+		"find -name 'com.google.android.gcm.xml' -type f -exec rm -f {} +; " & _
+		"find -name 'com.mobileapptracking.xml' -type f -exec rm -f {} +; " & _
+		"find -name '*.bak' -type f -exec rm -f {} +; " & _
+		"exit; exit'" & Chr(34), "", @SW_HIDE)
+
+		;"find -name 'HSJsonData.xml' -type f -exec rm -f {} +; " & _
+		;"find -name 'mat_queue.xml' -type f -exec rm -f {} +; " & _
+		;"find -name 'openudid_prefs.xml' -type f -exec rm -f {} +; " & _
+		;"find -name 'localPrefs.xml' -type f -exec rm -f {} +; " & _
+
+		DirRemove($hostPath, 1)
+	EndIf
+
+	If $lResult = 0 Then
+		SetLog("shared_prefs copy to emulator should be okay.", $COLOR_INFO)
+		;If $iMySwitchSmartWaitTime > 0 Then
+		;	SmartWait4TrainMini($iMySwitchSmartWaitTime, 1)
+		;	$iMySwitchSmartWaitTime = 0
+		;Else
+			OpenCoC()
+			Wait4Main()
+		;EndIf
+		Return True
+	EndIf
+
+	Return False
+EndFunc

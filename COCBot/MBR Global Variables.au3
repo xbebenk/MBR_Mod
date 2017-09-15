@@ -583,6 +583,8 @@ Global $btnAttNowLB
 Global $eLootPerc = 0
 Global $starsearned = 0
 Global $eTHLevel = "-"
+;sammod shared_prefs
+Global $g_iSamM0dDebug = 0
 
 ; Troops
 Global Enum $eTroopBarbarian, $eTroopArcher, $eTroopGiant, $eTroopGoblin, $eTroopWallBreaker, $eTroopBalloon, _
