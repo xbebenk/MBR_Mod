@@ -169,6 +169,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			$THString = FindTownhall(True, False)
 		EndIf
 
+		;xbenk
+		$THString = FindTownhall(True, False)
 		For $i = 0 To $g_iModeCount - 2
 			If $isModeActive[$i] Then
 				If $g_abFilterMeetOneConditionEnable[$i] Then
