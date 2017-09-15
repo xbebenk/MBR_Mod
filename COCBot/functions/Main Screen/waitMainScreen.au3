@@ -23,6 +23,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 		If Not $g_bRunState Then Return
 		If $g_iDebugSetlog = 1 Then Setlog("ChkObstl Loop = " & $i & "ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
+		ClickP($aAway, 1, 0, "#0221") ;Click Away
 		Local $hWin = $g_hAndroidWindow
 		If TestCapture() = False Then
 			If WinGetAndroidHandle() = 0 Then
