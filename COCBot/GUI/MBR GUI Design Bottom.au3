@@ -26,6 +26,7 @@ Global $g_hLblResultAttackedHourNow = 0, $g_hPicResultAttackedHourNow = 0, $g_hL
 Global $g_hLblVillageReportTemp = 0, $g_hBtnTestVillage = 0
 Global $g_hBtnEnableGUI = 0, $g_hBtnDisableGUI = 0	; Adding button to enable/disable GUI while botting (as requested by YScorpion) - Demen
 Global $g_ahLblHero[3], $g_hLblLab, $g_hLblLabTime	; Hero & Lab Status - Demen
+Global $g_hLblBatteryAC = 0, $g_hLblBatteryStatus = 0 ;xbenk
 
 Func CreateBottomPanel()
    Local $sTxtTip = ""
@@ -78,6 +79,9 @@ Func CreateBottomPanel()
 						      GetTranslatedFileIni("MBR GUI Design Bottom", "ChkBackgroundMode_Info_02", "With this you can also hide the Android Emulator window out of sight."))
 		   GUICtrlSetOnEvent(-1, "chkBackground")
 		   GUICtrlSetState(-1, (($g_bAndroidAdbScreencap = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED)))
+		;xbenk
+		$g_hLblBatteryAC = GUICtrlCreateLabel("AC", $x + 102, $y + 75, 50, 15)
+		$g_hLblBatteryStatus = GUICtrlCreateLabel("100", $x + 154, $y + 75, 30, 15)
 	   $g_hLblDonate = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Bottom", "LblDonate", "Support the development"), $x + 224, $y + 85, 220, 20, $SS_RIGHT) ; was y+80 x height 24. Sorry I have to move this down a little bit - Demen		   GUICtrlSetCursor(-1, 0) ; https://www.autoitscript.com/autoit3/docs/functions/MouseGetCursor.htm
 		   GUICtrlSetFont(-1, 8.5, $FW_BOLD) ;, $GUI_FONTITALIC + $GUI_FONTUNDER)
 		   _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "LblDonate_Info_01", "Paypal Donate?"))

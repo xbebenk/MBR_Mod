@@ -583,6 +583,8 @@ Global $btnAttNowLB
 Global $eLootPerc = 0
 Global $starsearned = 0
 Global $eTHLevel = "-"
+Global $g_bStopOnBatt = 0, $g_iStopOnBatt = 10
+
 ;sammod shared_prefs
 Global $g_iSamM0dDebug = 0
 

@@ -85,6 +85,8 @@ Func WaitForClouds()
 		$iSearchTime = __TimerDiff($hMinuteTimer) / 60000 ;get time since minute timer start in minutes
 		If $iSearchTime >= $iLastTime + 1 Then
 			Setlog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
+			;xbenk
+			_BatteryStatus()
 			If $iSearchTime > 10 Then
 				$g_bIsSearchLimit = True
 				ReturnHome(False, False) ;click returnhome button on cloud page
