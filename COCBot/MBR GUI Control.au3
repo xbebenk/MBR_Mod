@@ -15,6 +15,7 @@
 #include-once
 
 #include "functions\Other\GUICtrlGetBkColor.au3" ; Included here to use on GUI Control
+#include <WinAPISys.au3>
 
 Global $g_bRedrawBotWindow[3] = [True, False, False] ; [0] = window redraw enabled, [1] = window redraw required, [2] = window redraw requird by some controls, see CheckRedrawControls()
 Global $g_hFrmBot_WNDPROC = 0
@@ -2062,3 +2063,53 @@ Func IsGUICtrlHidden($hGUICtrl)
 	If BitAnd(WinGetState(GUICtrlGetHandle($hGUICtrl), ""), 2) = 0 Then Return True
 	Return False
 EndFunc
+
+;xbenk
+Func AttackNowLB()
+	Setlog("Begin Live Base Attack TEST")
+	$g_iMatchMode = $LB			; Select Live Base As Attack Type
+	$g_aiAttackAlgorithm[$LB] = 1			; Select Scripted Attack
+	$g_sAttackScrScriptName[$LB] = GuiCtrlRead($g_hCmbScriptNameAB)		; Select Scripted Attack File From The Combo Box, Cos it wasn't refreshing until pressing Start button
+	$g_bRunState = True
+
+	ResetTHsearch()
+
+	ForceCaptureRegion()
+	_CaptureRegion2()
+
+	FindTownhall(True)
+
+	PrepareAttack($g_iMatchMode)			; lol I think it's not needed for Scripted attack, But i just Used this to be sure of my code
+	Attack()			; Fire xD
+	Setlog("End Live Base Attack TEST")
+EndFunc   ;==>AttackNowLB
+
+Func _BatteryStatus()
+    Local $aData = _WinAPI_GetSystemPowerStatus()
+    If @error Then Return
+
+    If BitAND($aData[1], 128) Then
+        $aData[0] = '!!'
+    Else
+        Switch $aData[0]; ac or battery
+            Case 0
+                $aData[0] = 'BATT'
+            Case 1
+                $aData[0] = 'AC'
+            Case Else
+                $aData[0] = '--'
+        EndSwitch
+    EndIf
+	SetLog("Battery/Charging: " & $aData[0])
+	SetLog("Battery status: " & $aData[2] & "%")
+    GUICtrlSetData($g_hLblBatteryAC, $aData[0])
+	GUICtrlSetData($g_hLblBatteryStatus, $aData[2] & "%")
+
+	If $aData[2] < $g_iStopOnBatt and $aData[0] = "BATT" Then
+		SetLog("Battery status : " & $aData[2] & "% and is below than " & $g_iStopOnBatt & "%",$COLOR_WARNING)
+		SetLog("Stopping bot",$COLOR_ACTION1)
+		PoliteCloseCoC()
+		CloseAndroid(_BatteryStatus)
+		BotStop()
+	EndIf
+EndFunc   ;==>_BatteryStatus

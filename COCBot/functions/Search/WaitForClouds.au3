@@ -85,6 +85,16 @@ Func WaitForClouds()
 		$iSearchTime = __TimerDiff($hMinuteTimer) / 60000 ;get time since minute timer start in minutes
 		If $iSearchTime >= $iLastTime + 1 Then
 			Setlog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
+			;xbenk
+			_BatteryStatus()
+			If $iSearchTime > 10 Then
+				$g_bIsSearchLimit = True
+				ReturnHome(False, False) ;click returnhome button on cloud page
+				getArmyCapacity(True, True)
+				$g_bRestart = True ; set force runbot restart flag
+				$g_bIsClientSyncError = True ; set OOS flag for fast restart
+				Return
+			EndIf
 			$iLastTime += 1
 			; once a minute safety checks for search fail/retry msg and Personal Break events and early detection if CoC app has crashed inside emulator (Bluestacks issue mainly)
 			If chkAttackSearchFail() = 2 Or chkAttackSearchPersonalBreak() = True Or GetAndroidProcessPID() = 0 Then

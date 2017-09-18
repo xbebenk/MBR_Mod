@@ -523,7 +523,7 @@ Func FinalInitialization(Const $sAI)
 
 	; destroy splash screen here (so we witness the 100% ;)
 	DestroySplashScreen()
-
+	_BatteryStatus()
 	;AdlibRegister("PushBulletRemoteControl", $g_iPBRemoteControlInterval)
 	;AdlibRegister("PushBulletDeleteOldPushes", $g_iPBDeleteOldPushesInterval)
 
@@ -623,7 +623,7 @@ Func runBot() ;Bot that runs everything in order
 		If $b_iAutoRestartDelay > 0 And __TimerDiff($g_hBotLaunchTime) > $b_iAutoRestartDelay * 1000 Then
 			If RestartBot(False) = True Then Return
 		EndIf
-
+		_BatteryStatus()
 		PrepareDonateCC()
 		$g_bRestart = False
 		$g_bFullArmy = False
@@ -794,7 +794,7 @@ Func Idle() ;Sequence that runs until Full Army
 		Local $hTimer = __TimerInit()
 		Local $iReHere = 0
 		;PrepareDonateCC()
-
+		_BatteryStatus()
 		;If $g_bDonateSkipNearFullEnable = True Then getArmyCapacity(true,true)
 		If $g_iActiveDonate And $g_bChkDonate Then
 			Local $aHeroResult = CheckArmyCamp(True, True, True, False)
@@ -915,6 +915,7 @@ EndFunc   ;==>Idle
 
 Func AttackMain() ;Main control for attack functions
 	;LoadAmountOfResourcesImages() ; for debug
+	_BatteryStatus()
 	getArmyCapacity(True, True)
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Or IsSearchModeActive($TS) Then
