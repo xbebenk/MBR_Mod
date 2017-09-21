@@ -237,6 +237,10 @@ Func CheckPostponedLog($bNow = False)
 		$iLogs += FlushGuiLog($g_hTxtAtkLog, $g_oTxtAtkLogInitText, False, "txtAtkLog")
 	EndIf
 
+	If $g_oTxtSALogInitText.Count > 0 And $g_hTxtSALog <> 0 Then ; SwitchAcc Demen_SA_#9001
+		$iLogs += FlushGuiLog($g_hTxtSALog, $g_oTxtSALogInitText, False, "txtSALog")
+	EndIf
+
 	$g_hTxtLogTimer = __TimerInit()
 	Return $iLogs
 EndFunc   ;==>CheckPostponedLog
