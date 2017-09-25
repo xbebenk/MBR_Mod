@@ -1,6 +1,7 @@
 ﻿#RequireAdmin
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_UseUpx=y
+#AutoIt3Wrapper_Run_AU3Check=n
 #Au3Stripper_Parameters=/rsln /MI=3
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 ; #FUNCTION# ====================================================================================================================
@@ -71,11 +72,11 @@ InitializeBot()
 MainLoop()
 
 Func UpdateBotTitle()
-	Local $sTitle = "My Bot " & $g_sBotVersion & " "
+	Local $sTitle = "MyBot " & $g_sBotVersion & " [Demen_4.6 - xbebenk] "
 	If $g_sBotTitle = "" Then
 		$g_sBotTitle = $sTitle
 	Else
-		$g_sBotTitle = $sTitle & "(" & ($g_sAndroidInstance <> "" ? $g_sAndroidInstance : $g_sAndroidEmulator) & ")" ;Do not change this. If you do, multiple instances will not work.
+		$g_sBotTitle = $sTitle & "[" & ($g_sAndroidInstance <> "" ? $g_sAndroidInstance : $g_sAndroidEmulator) & "]" ;Do not change this. If you do, multiple instances will not work.
 	EndIf
 	If $g_hFrmBot <> 0 Then
 		; Update Bot Window Title also
@@ -620,7 +621,7 @@ Func runBot() ;Bot that runs everything in order
 					EndIf
 				EndIf
 			EndIf
-			
+
 		;Check for debug wait command
 		If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then
 			While (FileReadLine(@ScriptDir & "\EnableMBRDebug.txt") = "wait")
