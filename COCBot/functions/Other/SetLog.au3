@@ -276,12 +276,14 @@ Func SetAtkLog($String1, $String2 = "", $Color = $COLOR_BLACK, $Font = "Lucida C
 
 EndFunc   ;==>SetAtkLog
 
+;xbenk
 Func AtkLogHead()
-	Local $Text = ""						; SwitchAcc Demen_SA_#9001
-	If $g_bChkSwitchAcc Then $Text = "Ac."	; SwitchAcc Demen_SA_#9001
+	Local $Text = ""							; SwitchAcc Demen
+	If $ichkSwitchAcc = 1 Then $Text = "Ac|"	; SwitchAcc Demen
 	SetAtkLog(_PadStringCenter(" " & GetTranslatedFileIni("MBR Func_AtkLogHead", "AtkLogHead_Text_01", "ATTACK LOG") & " ", 71, "="), "", $COLOR_BLACK, "MS Shell Dlg", 8.5)
-	SetAtkLog(GetTranslatedFileIni("MBR Func_AtkLogHead", "AtkLogHead_Text_02", '|                  --------  LOOT --------       ----- BONUS ------'), "")
-	SetAtkLog($Text & GetTranslatedFileIni("MBR Func_AtkLogHead", "AtkLogHead_Text_03", '|TIME|TROP.|SEARCH|   GOLD| ELIXIR|DARK EL|TR.|S|  GOLD|ELIXIR|  DE|L.'), "") ; Demen_SA_#9001
+	SetAtkLog(GetTranslatedFileIni("MBR Func_AtkLogHead", "AtkLogHead_Text_02", '|              ---- RESULT --- ---- LOOT ---- ---- BONUS ----'), "")
+	SetAtkLog($Text & GetTranslatedFileIni("MBR Func_AtkLogHead", "AtkLogHead_Text_03", 'TIME |TROP|SRC|TH|TR|[%]|TR.|S|GOLD|ELIX|  DE|GOLD|ELIX|  DE|L.|Account'), "")
+	;---------------------------------------------------------------
 EndFunc   ;==>AtkLogHead
 
 Func __FileWriteLog($handle, $text)

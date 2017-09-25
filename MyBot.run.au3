@@ -1,4 +1,10 @@
-﻿; #FUNCTION# ====================================================================================================================
+﻿#RequireAdmin
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_UseUpx=y
+#AutoIt3Wrapper_Run_AU3Check=n
+#Au3Stripper_Parameters=/rsln /MI=3
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+; #FUNCTION# ====================================================================================================================
 ; Name ..........: MBR Bot
 ; Description ...: This file contains the initialization and main loop sequences f0r the MBR Bot
 ; Author ........:  (2014)
@@ -11,11 +17,7 @@
 ; ===============================================================================================================================
 
 ; AutoIt pragmas
-#RequireAdmin
-#AutoIt3Wrapper_UseX64=7n
 ;#AutoIt3Wrapper_Res_HiDpi=Y ; HiDpi will be set during run-time!
-#AutoIt3Wrapper_Run_Au3Stripper=y
-#Au3Stripper_Parameters=/rsln /MI=3
 ;/SV=0
 
 ;#AutoIt3Wrapper_Change2CUI=y
@@ -32,7 +34,7 @@
 Opt("MustDeclareVars", 1)
 
 Global $g_sBotVersion = "v7.2.5" ;~ Don't add more here, but below. Version can't be longer than vX.y.z because it is also use on Checkversion()
-Global $g_sModversion = "Demen_v5.0" ; <== Just Change This to Version Number - Demen_GE_#9000
+Global $g_sModversion = "Demen_v4.6" ; <== Just Change This to Version Number
 Global $g_sBotTitle = "" ;~ Don't assign any title here, use Func UpdateBotTitle()
 Global $g_hFrmBot = 0 ; The main GUI window
 
@@ -70,11 +72,11 @@ InitializeBot()
 MainLoop()
 
 Func UpdateBotTitle()
-	Local $sTitle = "My Bot " & $g_sBotVersion & " "
+	Local $sTitle = "MyBot " & $g_sBotVersion & " [Demen_4.6 - xbebenk] "
 	If $g_sBotTitle = "" Then
 		$g_sBotTitle = $sTitle
 	Else
-		$g_sBotTitle = $sTitle & "(" & ($g_sAndroidInstance <> "" ? $g_sAndroidInstance : $g_sAndroidEmulator) & ")" ;Do not change this. If you do, multiple instances will not work.
+		$g_sBotTitle = $sTitle & "[" & ($g_sAndroidInstance <> "" ? $g_sAndroidInstance : $g_sAndroidEmulator) & "]" ;Do not change this. If you do, multiple instances will not work.
 	EndIf
 	If $g_hFrmBot <> 0 Then
 		; Update Bot Window Title also
@@ -99,7 +101,7 @@ Func InitializeBot()
 
 	SetLogCentered(" BOT LOG ") ; Initial text for log
 
-	SetSwitchAccLog(_PadStringCenter(" SwitchAcc Log ", 25, "="), $COLOR_BLACK, "Lucida Console", 8, False) ; Demen_SA_#9001
+	SetSwitchAccLog(_PadStringCenter(" SwitchAcc Log ", 25, "="), "", $COLOR_BLACK, "Lucida Console", 8, False) ; Demen_SA_#9001
 
 	; Debug Output of launch parameter
 	SetDebugLog("@AutoItExe: " & @AutoItExe)
@@ -523,7 +525,7 @@ Func FinalInitialization(Const $sAI)
 
 	; destroy splash screen here (so we witness the 100% ;)
 	DestroySplashScreen()
-
+	_BatteryStatus()
 	;AdlibRegister("PushBulletRemoteControl", $g_iPBRemoteControlInterval)
 	;AdlibRegister("PushBulletDeleteOldPushes", $g_iPBDeleteOldPushesInterval)
 
@@ -612,6 +614,16 @@ Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
 
 	While 1
+	     ; samm0d - auto hide emulator
+			If $g_bChkAutoHideEmulator Then
+				If $g_bFlagHideEmulator = False Then
+					If $g_bIsHidden = False Then
+						btnHide()
+						$g_bFlagHideEmulator = True
+					EndIf
+				EndIf
+			EndIf
+
 		;Check for debug wait command
 		If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then
 			While (FileReadLine(@ScriptDir & "\EnableMBRDebug.txt") = "wait")
@@ -623,7 +635,7 @@ Func runBot() ;Bot that runs everything in order
 		If $b_iAutoRestartDelay > 0 And __TimerDiff($g_hBotLaunchTime) > $b_iAutoRestartDelay * 1000 Then
 			If RestartBot(False) = True Then Return
 		EndIf
-
+		_BatteryStatus()
 		PrepareDonateCC()
 		$g_bRestart = False
 		$g_bFullArmy = False
@@ -648,8 +660,8 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bRestart = True Then ContinueLoop
 			If _Sleep($DELAYRUNBOT3) Then Return
 			VillageReport()
-			UpdateHeroStatus() ; Demen_HL_#9005
-			UpdateLabStatus() ; Demen_HL_#9005
+			UpdateHeroStatus() ; Demen
+			UpdateLabStatus() ; Demen
 			If $g_bOutOfGold = True And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
 				$g_bOutOfGold = False ; reset out of gold flag
 				Setlog("Switching back to normal after no gold to search ...", $COLOR_SUCCESS)
@@ -663,7 +675,7 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT5) Then Return
 			checkMainScreen(False)
 			If $g_bRestart = True Then ContinueLoop
-			Local $aRndFuncList = ['Collect', 'CheckTombs', 'ReArm', 'CleanYard', 'RequestCC'] ; moving RequestCC earlier - (Other mod's Code ref. Demen_OT_#9009)
+			Local $aRndFuncList = ['Collect', 'CheckTombs', 'ReArm', 'CleanYard', 'RequestCC'] ; moving RequestCC earlier
 			While 1
 				If $g_bRunState = False Then Return
 				If $g_bRestart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
@@ -682,7 +694,7 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bRunState = False Then Return
 			If $g_bRestart = True Then ContinueLoop
 			If IsSearchAttackEnabled() Then ; if attack is disabled skip reporting, requesting, donating, training, and boosting
-				Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'BoostBarracks', 'BoostSpellFactory', 'BoostKing', 'BoostQueen', 'BoostWarden'] ; moving RequestCC earlier - (Other mod's Code ref. Demen_OT_#9009)
+				Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'BoostBarracks', 'BoostSpellFactory', 'BoostKing', 'BoostQueen', 'BoostWarden']
 				While 1
 					If $g_bRunState = False Then Return
 					If $g_bRestart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
@@ -794,7 +806,7 @@ Func Idle() ;Sequence that runs until Full Army
 		Local $hTimer = __TimerInit()
 		Local $iReHere = 0
 		;PrepareDonateCC()
-
+		_BatteryStatus()
 		;If $g_bDonateSkipNearFullEnable = True Then getArmyCapacity(true,true)
 		If $g_iActiveDonate And $g_bChkDonate Then
 			Local $aHeroResult = CheckArmyCamp(True, True, True, False)
@@ -915,6 +927,7 @@ EndFunc   ;==>Idle
 
 Func AttackMain() ;Main control for attack functions
 	;LoadAmountOfResourcesImages() ; for debug
+	_BatteryStatus()
 	getArmyCapacity(True, True)
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Or IsSearchModeActive($TS) Then
@@ -1087,7 +1100,7 @@ Func _RunFunction($action)
 		Case "BoostWarden"
 			BoostWarden()
 		Case "RequestCC"
-			CheckCC() ; Demen_CC_#9004
+			CheckCC() ; Demen
 			RequestCC()
 			If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
 		Case "Laboratory"

@@ -200,7 +200,7 @@ Func SaveRegularConfig()
 	SaveConfig_600_35()
 	; <><><> Attack Plan / Train Army / Troops/Spells <><><>
 	; Quick train
-;~ 	SaveConfig_600_52_1()	; QuickTrainCombo - Demen_QT_#9006
+;~ 	SaveConfig_600_52_1()	; Included in SmartTrain - Demen
 	; troop/spell levels and counts
 	SaveConfig_600_52_2()
 	; <><><> Attack Plan / Train Army / Train Order <><><>
@@ -220,7 +220,7 @@ Func SaveRegularConfig()
 	; <><><><> Bot / Stats <><><><>
 	; <<< nothing here >>>
 
-	; Demen Mod - Demen_GE_#9000
+	SaveConfig_SwitchAcc() ; Demen_SA_#9001
 	SaveConfig_Mod()
 
 	;SetDebugLog("saveConfig: Wrote " & $g_iIniLineCount & " ini lines.")
@@ -972,6 +972,7 @@ Func SaveConfig_600_35()
 	_Ini_Add("deletefiles", "DeleteLootsDays", $g_iDeleteLootsDays)
 	_Ini_Add("general", "AutoStart", $g_bAutoStart ? 1 : 0)
 	_Ini_Add("general", "AutoStartDelay", $g_iAutoStartDelay)
+	_Ini_Add("AutoHideEmulator", "Enable", (GUICtrlRead($chkAutoHideEmulator) = $GUI_CHECKED ? 1 : 0))
 	_Ini_Add("General", "ChkLanguage", $g_bCheckGameLanguage ? 1 : 0)
 	_Ini_Add("general", "DisposeWindows", $g_bAutoAlignEnable ? 1 : 0)
 	_Ini_Add("general", "DisposeWindowsPos", $g_iAutoAlignPosition)
@@ -989,11 +990,13 @@ Func SaveConfig_600_35()
 	_Ini_Add("other", "ValuePBTimeForcedExit", $g_iSinglePBForcedEarlyExitTime)
 	_Ini_Add("other", "ChkAutoResume", $g_bAutoResumeEnable ? 1 : 0)
 	_Ini_Add("other", "AutoResumeTime", $g_iAutoResumeTime)
+	_Ini_Add("other", "ChkStopOnBatt", $g_bStopOnBatt ? 1 : 0)
+	_Ini_Add("other", "StopOnBatt", $g_iStopOnBatt)
 	_Ini_Add("other", "ChkDisableNotifications", $g_bDisableNotifications)
 	_Ini_Add("other", "ChkFixClanCastle", $g_bForceClanCastleDetection ? 1 : 0)
 EndFunc   ;==>SaveConfig_600_35
 
-#CS	; QuickTrainCombo - Demen_QT_#9006
+#CS	; Included in SmartTrain - Demen
 Func SaveConfig_600_52_1()
 	; <><><> Attack Plan / Train Army / Troops/Spells <><><>
 	ApplyConfig_600_52_1("Save")

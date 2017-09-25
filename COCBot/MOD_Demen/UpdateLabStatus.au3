@@ -1,5 +1,5 @@
 ; #FUNCTION# ====================================================================================================================
-; Name ..........: UpdateLabStatus - Demen_HL_#9005
+; Name ..........: UpdateLabStatus
 ; Description ...: Laboratory status and researching time
 ; Syntax ........:
 ; Parameters ....: None
@@ -12,7 +12,6 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......:
 ; ===============================================================================================================================
-#include-once
 
 Func LabStatusAndTime()
 
