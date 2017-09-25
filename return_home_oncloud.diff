@@ -1,0 +1,61 @@
+From 4f990c1c626e32776b3881cebd453732d85a86cc Mon Sep 17 00:00:00 2001
+From: xbebenk <xbebenk@gmail.com>
+Date: Fri, 15 Sep 2017 22:06:49 +0700
+Subject: [PATCH] Add Click return home on cloud page, while searching time >
+ 10 minutes for one enemy (Legend League)
+
+---
+ COCBot/functions/Attack/ReturnHome.au3        | 4 ++++
+ COCBot/functions/Config/ScreenCoordinates.au3 | 1 +
+ COCBot/functions/Search/WaitForClouds.au3     | 8 ++++++++
+ 3 files changed, 13 insertions(+)
+
+diff --git a/COCBot/functions/Attack/ReturnHome.au3 b/COCBot/functions/Attack/ReturnHome.au3
+index 0a8605d..e61be5c 100644
+--- a/COCBot/functions/Attack/ReturnHome.au3
++++ b/COCBot/functions/Attack/ReturnHome.au3
+@@ -24,6 +24,10 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
+ 		SetLog("Disabling Normal End Battle Options", $COLOR_SUCCESS)
+ 	EndIf
+ 
++	If $TakeSS = False and $GoldChangeCheck = False Then
++		ClickP($aReturnHomeOnSearchButton, 1, 0, "RETURN HOME") ;Click Return Home
++	EndIf
++
+ 	If $GoldChangeCheck = True Then
+ 		If Not (IsReturnHomeBattlePage(True, False)) Then ; if already in return home battle page do not wait and try to activate Hero Ability and close battle
+ 			SetLog("Checking if the battle has finished", $COLOR_INFO)
+diff --git a/COCBot/functions/Config/ScreenCoordinates.au3 b/COCBot/functions/Config/ScreenCoordinates.au3
+index 3733928..7f3962a 100644
+--- a/COCBot/functions/Config/ScreenCoordinates.au3
++++ b/COCBot/functions/Config/ScreenCoordinates.au3
+@@ -46,6 +46,7 @@ Global $aCancelFight2[4] = [830, 59, 0xD80408, 20] ; Cancel Fight Scene 2nd pixe
+ Global $aEndFightSceneBtn[4] = [429, 519 + $g_iMidOffsetY, 0xB8E35F, 20] ; Victory or defeat scene buton = green edge
+ Global $aEndFightSceneAvl[4] = [241, 196 + $g_iMidOffsetY, 0xFFF090, 20] ; Victory or defeat scene left side ribbon = light gold
+ Global $aReturnHomeButton[4] = [376, 567 + $g_iMidOffsetY, 0x60AC10, 20] ; Return Home Button, End Battle Screen
++Global $aReturnHomeOnSearchButton[4] = [55, 650 + $g_iMidOffsetY] ; Return Home Button, on Search Screen
+ Global $aChatTab[4] = [331, 325 + $g_iMidOffsetY, 0xF0951D, 20] ; Chat Window Open, Main Screen
+ Global $aChatTab2[4] = [331, 330 + $g_iMidOffsetY, 0xF0951D, 20] ; Chat Window Open, Main Screen
+ Global $aChatTab3[4] = [331, 335 + $g_iMidOffsetY, 0xF0951D, 20] ; Chat Window Open, Main Screen
+diff --git a/COCBot/functions/Search/WaitForClouds.au3 b/COCBot/functions/Search/WaitForClouds.au3
+index e419bb3..0f674ec 100644
+--- a/COCBot/functions/Search/WaitForClouds.au3
++++ b/COCBot/functions/Search/WaitForClouds.au3
+@@ -85,6 +85,14 @@ Func WaitForClouds()
+ 		$iSearchTime = __TimerDiff($hMinuteTimer) / 60000 ;get time since minute timer start in minutes
+ 		If $iSearchTime >= $iLastTime + 1 Then
+ 			Setlog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
++			If $iSearchTime > 10 Then
++				$g_bIsSearchLimit = True
++				ReturnHome(False, False) ;click returnhome button on cloud page
++				getArmyCapacity(True, True)
++				$g_bRestart = True ; set force runbot restart flag
++				$g_bIsClientSyncError = True ; set OOS flag for fast restart
++				Return
++			EndIf
+ 			$iLastTime += 1
+ 			; once a minute safety checks for search fail/retry msg and Personal Break events and early detection if CoC app has crashed inside emulator (Bluestacks issue mainly)
+ 			If chkAttackSearchFail() = 2 Or chkAttackSearchPersonalBreak() = True Or GetAndroidProcessPID() = 0 Then
+-- 
+2.8.2.windows.1
+
