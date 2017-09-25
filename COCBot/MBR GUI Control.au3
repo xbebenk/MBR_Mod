@@ -15,7 +15,6 @@
 #include-once
 
 #include "functions\Other\GUICtrlGetBkColor.au3" ; Included here to use on GUI Control
-#include <WinAPISys.au3>
 
 Global $g_bRedrawBotWindow[3] = [True, False, False] ; [0] = window redraw enabled, [1] = window redraw required, [2] = window redraw requird by some controls, see CheckRedrawControls()
 Global $g_hFrmBot_WNDPROC = 0
@@ -49,7 +48,7 @@ Global $g_hFrmBot_WNDPROC_ptr = 0
 #include "GUI\MBR GUI Control Android.au3"
 #include "MBR GUI Action.au3"
 
-; Demen Mod
+; Demen Mod - Demen_GE_#9000
 #include "MOD_Demen\GUI Control_Demen.au3"
 
 Func InitializeMainGUI()
@@ -447,7 +446,6 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 		Case $g_hLblDonate
 			; Donate URL is not in text nor tooltip
 			ShellExecute("https://mybot.run/forums/index.php?/donate/make-donation/")
-			Setlog("Demen Debug: support developer")
 		Case $g_hBtnStop
 			btnStop()
 		Case $g_hBtnPause
@@ -1371,17 +1369,15 @@ Func SetTime($bForceUpdate = False)
 		GUICtrlSetData($g_hLblResultRuntimeNow, StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
 	EndIf
 
-; Showing troops time in ProfileStats - SwitchAcc - Demen_SA_#9001
+; Showing troops time in MultiStats - SwitchAcc - Demen_SA_#9001
 	Local Static $DisplayLoop = 0
-	If $DisplayLoop >= 10 Then ; Conserve Clock Cycles on Updating times
+	If $DisplayLoop >= 3 Then ; Conserve Clock Cycles on Updating times
 		$DisplayLoop = 0
 		If $g_bChkSwitchAcc Then
 			If GUICtrlRead($g_hGUI_BOT_TAB, 1) = $g_hGUI_BOT_TAB_ITEM6 Then
 				For $i = 0 To $g_iTotalAcc;  Update time for all Accounts
 					; Troop Time (include spell and hero if needed)
-					If $g_abAccountNo[$i] And Not $g_abDonateOnly[$i] And _
-							$i <> $g_iCurAccount And _
-							$g_aiTimerStart[$i] <> 0 Then
+					If $g_abAccountNo[$i] And Not $g_abDonateOnly[$i] And $g_aiTimerStart[$i] <> 0 Then
 						Local $UpdateTrainTime = $g_aiRemainTrainTime[$i] - TimerDiff($g_aiTimerStart[$i]) / 60 / 1000 ; in minutes
 						Local $sReadyTime = ""
 						If Abs($UpdateTrainTime) >= 60 Then
@@ -1390,14 +1386,17 @@ Func SetTime($bForceUpdate = False)
 						   $sReadyTime &= Int($UpdateTrainTime) & "m " & Abs(Round(Mod($UpdateTrainTime,1) * 60, 0)) & "s"
 						EndIf
 
-						If $UpdateTrainTime < 0 Then
-							GUICtrlSetBkColor($g_lblTroopsTime[$i], $COLOR_RED)
-							GUICtrlSetColor($g_lblTroopsTime[$i], $COLOR_WHITE)
+						If $i = $g_iCurAccount Then
+							GUICtrlSetBkColor($g_ahLblTroopsTime[$i], $COLOR_GREEN)
+							GUICtrlSetColor($g_ahLblTroopsTime[$i], $COLOR_WHITE)
+						ElseIf $UpdateTrainTime < 0 Then
+							GUICtrlSetBkColor($g_ahLblTroopsTime[$i], $COLOR_RED)
+							GUICtrlSetColor($g_ahLblTroopsTime[$i], $COLOR_WHITE)
 						Else
-							GUICtrlSetBkColor($g_lblTroopsTime[$i], $COLOR_YELLOW)
-							GUICtrlSetColor($g_lblTroopsTime[$i], $COLOR_BLACK)
+							GUICtrlSetBkColor($g_ahLblTroopsTime[$i], $COLOR_YELLOW)
+							GUICtrlSetColor($g_ahLblTroopsTime[$i], $COLOR_BLACK)
 						EndIf
-						GUICtrlSetData($g_lblTroopsTime[$i], $sReadyTime)
+						GUICtrlSetData($g_ahLblTroopsTime[$i], $sReadyTime)
 					EndIf
 
 					; Lab time
@@ -1422,7 +1421,7 @@ Func SetTime($bForceUpdate = False)
 		EndIf
 	EndIf
 	$DisplayLoop += 1
-; Showing troops time in ProfileStats - SwitchAcc - Demen_SA_#9001
+; Showing troops time in MultiStats - SwitchAcc - Demen_SA_#9001
 
 EndFunc   ;==>SetTime
 
@@ -1693,7 +1692,7 @@ Func tabBot()
 				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_STATS)
 				GUISetState(@SW_HIDE, $g_hGUI_LOG_SA) ; Demen_SA_#9001
 				ControlHide("","",$g_hCmbGUILanguage)
-			Case $tabidx = 5 ; ProfileStats tab - SwitchAcc Demen_SA_#9001
+			Case $tabidx = 5 ; MultiStats tab - SwitchAcc Demen_SA_#9001
 				GUISetState(@SW_HIDE, $g_hGUI_STATS)
 				GUISetState(@SW_HIDE, $g_hGUI_LOG_SA)
 				If $g_bRunState = False Then UpdateMultiStats()
@@ -2063,55 +2062,3 @@ Func IsGUICtrlHidden($hGUICtrl)
 	If BitAnd(WinGetState(GUICtrlGetHandle($hGUICtrl), ""), 2) = 0 Then Return True
 	Return False
 EndFunc
-
-;xbenk
-Func AttackNowLB()
-	Setlog("Begin Live Base Attack TEST")
-	$g_iMatchMode = $LB			; Select Live Base As Attack Type
-	$g_aiAttackAlgorithm[$LB] = 1			; Select Scripted Attack
-	$g_sAttackScrScriptName[$LB] = GuiCtrlRead($g_hCmbScriptNameAB)		; Select Scripted Attack File From The Combo Box, Cos it wasn't refreshing until pressing Start button
-	$g_bRunState = True
-
-	ResetTHsearch()
-
-	ForceCaptureRegion()
-	_CaptureRegion2()
-
-	FindTownhall(True)
-
-	PrepareAttack($g_iMatchMode)			; lol I think it's not needed for Scripted attack, But i just Used this to be sure of my code
-	Attack()			; Fire xD
-	Setlog("End Live Base Attack TEST")
-EndFunc   ;==>AttackNowLB
-
-Func _BatteryStatus()
-    Local $aData = _WinAPI_GetSystemPowerStatus()
-    If @error Then Return
-
-    If BitAND($aData[1], 128) Then
-        $aData[0] = '!!'
-    Else
-        Switch $aData[0]; ac or battery
-            Case 0
-                $aData[0] = 'BATT'
-            Case 1
-                $aData[0] = 'AC'
-            Case Else
-                $aData[0] = '--'
-		EndSwitch
-
-		If $aData[0] = 'BATT' Then
-			SetLog("Battery/Charging: " & $aData[0] & " Battery status: " & $aData[2] & "%")
-			GUICtrlSetData($g_hLblBatteryAC, $aData[0])
-			GUICtrlSetData($g_hLblBatteryStatus, $aData[2] & "%")
-
-			If $aData[2] < $g_iStopOnBatt Then
-				SetLog("Battery status : " & $aData[2] & "% and is below than " & $g_iStopOnBatt & "%",$COLOR_WARNING)
-				SetLog("Stopping bot",$COLOR_ACTION1)
-				PoliteCloseCoC()
-				CloseAndroid(_BatteryStatus)
-				BotStop()
-			EndIf
-		EndIf
-    EndIf
-EndFunc   ;==>_BatteryStatus

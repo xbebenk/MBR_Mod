@@ -459,11 +459,6 @@ Global $g_bBotLaunchOption_NoBotSlot = False ; If True, bot slot Mutex are not u
 Global $g_asCmdLine[1] = [0] ; Clone of $CmdLine without options, please use instead of $CmdLine
 Global Const $g_sWorkingDir = @WorkingDir ; Working Directory at bot launch
 
-; auto hide emulator after start
-Global $chkAutoHideEmulator
-Global $g_bChkAutoHideEmulator = False
-Global $g_bFlagHideEmulator = False
-
 ; Mutex Handles
 Global $g_hMutex_BotTitle = 0
 Global $g_hMutex_Profile = 0
@@ -577,16 +572,6 @@ Global Enum $DB, $LB, $TS, $MA, $TB, $DT ; DeadBase, ActiveBase, TownhallSnipe, 
 Global Const $g_iModeCount = 3
 Global $g_iMatchMode = 0 ; 0 Dead / 1 Live / 2 TH Snipe / 3 Milking Attack / 4 TH Bully / 5 Drop Trophy
 Global Const $g_asModeText[6] = ["Dead Base", "Live Base", "TH Snipe", "Milking Attack", "TH Bully", "Drop Trophy"]
-
-;xbenk
-Global $btnAttNowLB
-Global $eLootPerc = 0
-Global $starsearned = 0
-Global $eTHLevel = "-"
-Global $g_bStopOnBatt = 0, $g_iStopOnBatt = 10
-
-;sammod shared_prefs
-Global $g_iSamM0dDebug = 0
 
 ; Troops
 Global Enum $eTroopBarbarian, $eTroopArcher, $eTroopGiant, $eTroopGoblin, $eTroopWallBreaker, $eTroopBalloon, _
@@ -1560,5 +1545,5 @@ $g_oBldgImages.add($eBldgMortar & "_" & "0", @ScriptDir & "\imgxml\Buildings\Mor
 $g_oBldgImages.add($eBldgAirDefense & "_" & "0", @ScriptDir & "\imgxml\Buildings\ADefense")
 
 ; EOF
-; Demen MOD
+; Demen MOD - Demen_GE_#9000
 #include "MOD_Demen\Globals_Demen.au3"

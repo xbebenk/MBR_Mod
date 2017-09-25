@@ -24,10 +24,6 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		SetLog("Disabling Normal End Battle Options", $COLOR_SUCCESS)
 	EndIf
 
-	If $TakeSS = False and $GoldChangeCheck = False Then
-		ClickP($aReturnHomeOnSearchButton, 1, 0, "RETURN HOME") ;Click Return Home
-	EndIf
-
 	If $GoldChangeCheck = True Then
 		If Not (IsReturnHomeBattlePage(True, False)) Then ; if already in return home battle page do not wait and try to activate Hero Ability and close battle
 			SetLog("Checking if the battle has finished", $COLOR_INFO)

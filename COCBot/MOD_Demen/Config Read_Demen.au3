@@ -12,8 +12,20 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+#include-once
 
 Func ReadConfig_Mod()
+
+	; SwitchAcc - Demen_SA_#9001
+	IniReadS($g_bChkSwitchAcc, $g_sProfilePath & "\Profile.ini", "SwitchAcc", "Enable", False, "Bool")
+	IniReadS($g_bChkSmartSwitch, $g_sProfilePath & "\Profile.ini", "SwitchAcc", "SmartSwitch", False, "Bool")
+	IniReadS($g_iTotalAcc, $g_sProfilePath & "\Profile.ini", "SwitchAcc", "Total Coc Account", -1, "int")
+	For $i = 0 To 7
+		IniReadS($g_abAccountNo[$i], $g_sProfilePath & "\Profile.ini", "SwitchAcc", "AccountNo." & $i, False, "Bool")
+		IniReadS($g_aiProfileNo[$i], $g_sProfilePath & "\Profile.ini", "SwitchAcc", "ProfileNo." & $i, -1, "int")
+		IniReadS($g_abDonateOnly[$i], $g_sProfilePath & "\Profile.ini", "SwitchAcc", "DonateOnly." & $i, False, "Bool")
+	Next
+	IniReadS($g_iTrainTimeToSkip, $g_sProfilePath & "\Profile.ini", "SwitchAcc", "Train Time To Skip", 1, "int")
 
 	; 	QuickTrainCombo (Checkbox) - Demen_QT_#9006
 	$g_bQuickTrainEnable = (IniRead($g_sProfileConfigPath, "other", "ChkUseQTrain", "0") = "1")
@@ -35,44 +47,31 @@ Func ReadConfig_Mod()
 
 	; CheckCCTroops - Demen_CC_#9004
 	IniReadS($g_bChkCC, $g_sProfileConfigPath, "CheckCC", "Enable", False, "Bool")
-	IniReadS($g_iCmbCastleCap, $g_sProfileConfigPath, "CheckCC", "CmbCastleCap", 5, "Int")
+	IniReadS($g_iCmbCastleCapacityT, $g_sProfileConfigPath, "CheckCC", "Troop Capacity", 5, "Int")
+	IniReadS($g_iCmbCastleCapacityS, $g_sProfileConfigPath, "CheckCC", "Spell Capacity", 1, "Int")
+
 	For $i = 0 To $eTroopCount - 1
 		$g_aiCCTroopsExpected[$i] = 0
+		If $i >= $eSpellCount Then ContinueLoop
+		$g_aiCCSpellsExpected[$i] = 0
 	Next
 	$g_bChkCCTroops = False
-	For $i = 0 To 2
-		IniReadS($g_aiCmbCCTroopsExpect[$i], $g_sProfileConfigPath, "CheckCC", "Slot" & $i, 19, "int")
-		IniReadS($g_aiQtyCCTroopsExpect[$i], $g_sProfileConfigPath, "CheckCC", "Qty" & $i, 0, "int")
-		If $g_aiCmbCCTroopsExpect[$i] > -1 And $g_aiCmbCCTroopsExpect[$i] < $eTroopCount Then
-			Local $j = $g_aiCmbCCTroopsExpect[$i]
-			$g_aiCCTroopsExpected[$j] += $g_aiQtyCCTroopsExpect[$i]
+
+	For $i = 0 To 4
+		Local $default = 19
+		If $i > 2 Then $default = 9
+		IniReadS($g_aiCmbCCSlot[$i], $g_sProfileConfigPath, "CheckCC", "ExpectSlot" & $i, $default, "int")
+		IniReadS($g_aiTxtCCSlot[$i], $g_sProfileConfigPath, "CheckCC", "ExpectQty" & $i, 0, "int")
+		If $g_aiCmbCCSlot[$i] > -1 And $g_aiCmbCCSlot[$i] < $default Then
+			Local $j = $g_aiCmbCCSlot[$i]
+			If $i <= 2 Then
+				$g_aiCCTroopsExpected[$j] += $g_aiTxtCCSlot[$i]
+			Else
+				If $j > $eSpellFreeze Then $j += 1 ; exclude Clone Spell
+				$g_aiCCSpellsExpected[$j] += $g_aiTxtCCSlot[$i]
+			EndIf
 			If $g_bChkCC Then $g_bChkCCTroops = True
 		EndIf
 	Next
 
 EndFunc   ;==>ReadConfig_Mod
-
-; Demen_SA_#9001
-Func ReadConfig_SwitchAcc()
-<<<<<<< HEAD
-	IniReadS($ichkSwitchAcc, $profile, "SwitchAcc", "Enable", 0, "int")
-	IniReadS($ichkSwitchAccShared_pref, $profile, "SwitchAcc", "Shared_Pref", 0, "int")
-	IniReadS($icmbTotalCoCAcc, $profile, "SwitchAcc", "Total Coc Account", -1, "int")
-	IniReadS($ichkSmartSwitch, $profile, "SwitchAcc", "Smart Switch", 0, "int")
-	IniReadS($g_iTrainTimeToSkip, $profile, "SwitchAcc", "Train Time To Skip", 1, "int")
-	IniReadS($ichkForceSwitch, $profile, "SwitchAcc", "Force Switch", 0, "int")
-	IniReadS($iForceSwitch, $profile, "SwitchAcc", "Force Switch Search", 100, "int")
-	IniReadS($ichkForceStayDonate, $profile, "SwitchAcc", "Force Stay Donate", 0, "int")
-	IniReads($ichkCloseTraining, $profile, "SwitchAcc", "Sleep Combo", 0, "int") ; Sleep Combo, 1 = Close CoC, 2 = Close Android, 0 = No sleep
-=======
-	IniReadS($g_bChkSwitchAcc, $g_sProfilePath & "\Profile.ini", "SwitchAcc", "Enable", False, "Bool")
-	IniReadS($g_bChkSmartSwitch, $g_sProfilePath & "\Profile.ini", "SwitchAcc", "SmartSwitch", False, "Bool")
-	IniReadS($g_iTotalAcc, $g_sProfilePath & "\Profile.ini", "SwitchAcc", "Total Coc Account", -1, "int")
->>>>>>> 73f3ae0... New SwitchAcc
-	For $i = 0 To 7
-		IniReadS($g_abAccountNo[$i], $g_sProfilePath & "\Profile.ini", "SwitchAcc", "AccountNo." & $i, False, "Bool")
-		IniReadS($g_aiProfileNo[$i], $g_sProfilePath & "\Profile.ini", "SwitchAcc", "ProfileNo." & $i, -1, "int")
-		IniReadS($g_abDonateOnly[$i], $g_sProfilePath & "\Profile.ini", "SwitchAcc", "DonateOnly." & $i, False, "Bool")
-	Next
-	IniReadS($g_iTrainTimeToSkip, $g_sProfilePath & "\Profile.ini", "SwitchAcc", "Train Time To Skip", 1, "int")
-EndFunc   ;==>ReadConfig_SwitchAcc

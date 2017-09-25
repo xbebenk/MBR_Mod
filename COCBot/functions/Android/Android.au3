@@ -1450,7 +1450,6 @@ Func AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecce
 			EndIf
 			Local $pathFound = False
 			Local $iMount
-			Local $icount = 0
 			For $iMount = 0 To 9
 				If $g_sAndroidPicturesPath = "" Then
 					SetDebugLog("Problem in configuration, $g_sAndroidPicturesPath is empty", $COLOR_ERROR)
@@ -1482,17 +1481,11 @@ Func AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecce
 				FileDelete($g_sAndroidPicturesHostPath & $dummyFile)
 				If $pathFound = True Then ExitLoop
 				If $iMount = 0 Then
-					SetLog("Waiting for shared folder to get mounted... " & $icount, $COLOR_GREEN)
+					SetLog("Waiting for shared folder to get mounted...", $COLOR_GREEN)
 				Else
 					SetDebugLog("Still waiting for shared folder to get mounted...")
 				EndIf
-				$icount = $icount + 1
 				If _Sleep(6000) Then Return
-				If $icount > 3 Then
-					;RestartAndroidCoC(True, True)
-					SetLog("Restarting android due to shared folder not mounted properly", $COLOR_GREEN)
-					CloseAndroid(AndroidAdbSendShellCommand)
-				EndIf
 			Next
 			If $pathFound = False Then
 				SetLog($g_sAndroidEmulator & " cannot use ADB on shared folder, """ & $g_sAndroidPicturesPath & """ not found", $COLOR_ERROR)
